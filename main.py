@@ -10,8 +10,14 @@ class Application(tk.Frame):
         super().__init__(master)
         self.master = master
         self.master.title("Оценка авто")
+        self.master.geometry("800x600")
         self.pack(fill=tk.BOTH, expand=True)
         self.create_widgets()
+        self.client_tab()
+        self.car_tab()
+        self.analog_cars_tab()
+        self.otchet_tab()
+        self.upload_images_tab()
 
     def create_widgets(self):
         # Создаем вкладки
@@ -29,7 +35,7 @@ class Application(tk.Frame):
         self.tabControl.add(self.otchet, text="Отчет")
         self.tabControl.add(self.upload_images, text="Загрузка изображений")
         self.tabControl.pack(expand=1, fill="both")
-
+    def client_tab(self):
         # Определяем поля и метки для ввода данных собственника авто
         self.label_owner_surname = tk.Label(self.client, text="Фамилия собственника:")
         self.label_owner_surname.grid(row=0, column=0, padx=5, pady=5, sticky="w")
@@ -70,14 +76,28 @@ class Application(tk.Frame):
         self.label_customer_patronymic.grid(row=7, column=0, padx=5, pady=5, sticky="w")
         self.entry_customer_patronymic = tk.Entry(self.client)
         self.entry_customer_patronymic.grid(row=7, column=1, padx=5, pady=5)
+    def car_tab(self):
+        pass
+    def analog_cars_tab(self):
+        pass
+    def otchet_tab(self):
+        pass
 
-        # Создаем кнопку для загрузки изображения
-        self.button_load = tk.Button(self.client, text="Загрузить изображение", command=self.load_image)
-        self.button_load.grid(row=8, column=0, padx=5, pady=5, sticky="w")
+    def upload_images_tab(self):
+        # Создаем словарь для хранения путей к загруженным фотографиям
+        self.photo_paths = {}
 
-        # Создаем метку для отображения изображения
-        self.label_image = tk.Label(self.client)
-        self.label_image.grid(row=9, column=0, columnspan=2, padx=5, pady=5)
+        # Создаем метки и кнопки для загрузки фотографий
+        labels = ["Свидетельство о смерти:", "ПТС:", "Свидетельство о регистрации ТС:", "Паспорт заказчика:"]
+        for i, label in enumerate(labels):
+            label = tk.Label(self.upload_images, text=label)
+            label.grid(row=i, column=0, padx=5, pady=5, sticky="w")
+            button = tk.Button(self.upload_images, text="Загрузить фото", command=lambda idx=i: self.upload_photo(idx))
+            button.grid(row=i, column=1, padx=5, pady=5)
+
+        # Создаем метку для отображения пути к выбранной фотографии
+        self.label_photo_path = tk.Label(self.upload_images, text="")
+        self.label_photo_path.grid(row=len(labels), column=0, columnspan=2, padx=5, pady=10)
 
     # Создаем функцию для загрузки изображения и применения OCR
     def load_image(self):
