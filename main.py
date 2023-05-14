@@ -125,40 +125,40 @@ class Application(tk.Frame):
         self.spinbox_year_of_manufacture = tk.Spinbox(self.car, from_=1900, to=2050, increment=1)
         self.spinbox_year_of_manufacture.grid(row=4, column=1, padx=5, pady=5)
 
-        self.label_color = tk.Label(self.car, text="Коробка передач:")
-        self.label_color.grid(row=4, column=2, padx=5, pady=5, sticky="w")
-        self.entry_color = ttk.Combobox(self.car, values=['АКПП', 'МКПП'])
-        self.entry_color.grid(row=4, column=3, padx=5, pady=5)
+        self.label_transmission = tk.Label(self.car, text="Коробка передач:")
+        self.label_transmission.grid(row=4, column=2, padx=5, pady=5, sticky="w")
+        self.label_transmission = ttk.Combobox(self.car, values=['АКПП', 'МКПП'])
+        self.label_transmission.grid(row=4, column=3, padx=5, pady=5)
 
         self.label_color = tk.Label(self.car, text="Цвет:")
         self.label_color.grid(row=7, column=0, padx=5, pady=5, sticky="w")
         self.entry_color = ttk.Entry(self.car)
         self.entry_color.grid(row=7, column=1, padx=5, pady=5)
 
-        self.label_color = tk.Label(self.car, text="Число мест:")
-        self.label_color.grid(row=7, column=2, padx=5, pady=5, sticky="w")
-        self.entry_color = tk.Spinbox(self.car, from_=1, to=200, increment=1)
-        self.entry_color.grid(row=7, column=3, padx=5, pady=5)
+        self.entry_number_of_seats = tk.Label(self.car, text="Число мест:")
+        self.entry_number_of_seats.grid(row=7, column=2, padx=5, pady=5, sticky="w")
+        self.entry_number_of_seats = tk.Spinbox(self.car, from_=1, to=200, increment=1)
+        self.entry_number_of_seats.grid(row=7, column=3, padx=5, pady=5)
 
-        self.label_color = tk.Label(self.car, text="Мощность двигателя:")
-        self.label_color.grid(row=8, column=0, padx=5, pady=5, sticky="w")
-        self.entry_color = tk.Spinbox(self.car, from_=1, to=1500, increment=1)
-        self.entry_color.grid(row=8, column=1, padx=5, pady=5)
+        self.entry_engine_power = tk.Label(self.car, text="Мощность двигателя:")
+        self.entry_engine_power.grid(row=8, column=0, padx=5, pady=5, sticky="w")
+        self.entry_engine_power = tk.Spinbox(self.car, from_=1, to=1500, increment=1)
+        self.entry_engine_power.grid(row=8, column=1, padx=5, pady=5)
 
-        self.label_color = tk.Label(self.car, text="Объем двигателя:")
-        self.label_color.grid(row=8, column=2, padx=5, pady=5, sticky="w")
-        self.entry_color = tk.Spinbox(self.car, from_=1, to=10000, increment=1)
-        self.entry_color.grid(row=8, column=3, padx=5, pady=5)
+        self.entry_engine_capacity = tk.Label(self.car, text="Объем двигателя:")
+        self.entry_engine_capacity.grid(row=8, column=2, padx=5, pady=5, sticky="w")
+        self.entry_engine_capacity = tk.Spinbox(self.car, from_=1, to=10000, increment=1)
+        self.entry_engine_capacity.grid(row=8, column=3, padx=5, pady=5)
 
-        self.label_color = tk.Label(self.car, text="Технический паспорт:")
-        self.label_color.grid(row=10, column=0, padx=5, pady=5, sticky="w")
-        self.entry_color = ttk.Entry(self.car)
-        self.entry_color.grid(row=10, column=1, padx=5, pady=5)
+        self.entry_technical_passport = tk.Label(self.car, text="Технический паспорт:")
+        self.entry_technical_passport.grid(row=10, column=0, padx=5, pady=5, sticky="w")
+        self.entry_technical_passport = ttk.Entry(self.car)
+        self.entry_technical_passport.grid(row=10, column=1, padx=5, pady=5)
 
-        self.label_color = tk.Label(self.car, text="СРТС:")
-        self.label_color.grid(row=10, column=2, padx=5, pady=5, sticky="w")
-        self.entry_color = ttk.Entry(self.car)
-        self.entry_color.grid(row=10, column=3, padx=5, pady=5)
+        self.entry_srts = tk.Label(self.car, text="СРТС:")
+        self.entry_srts.grid(row=10, column=2, padx=5, pady=5, sticky="w")
+        self.entry_srts = ttk.Entry(self.car)
+        self.entry_srts.grid(row=10, column=3, padx=5, pady=5)
 
         def validate_entry_length(entry_text):
             if len(entry_text) <= 17:
@@ -171,8 +171,8 @@ class Application(tk.Frame):
 
     def analog_cars_tab(self):
         pass
-    def otchet_tab(self):
 
+    def otchet_tab(self):
         # Получение текущей даты
         current_date = datetime.date.today()
         current_month = current_date.month
@@ -181,25 +181,90 @@ class Application(tk.Frame):
         ru_month = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября',
                     'ноября', 'декабря']
 
-
         # Определяем поля и метки для ввода данных об отчете
-        self.label_date_of_create = tk.Label(self.otchet, text="Дата состовления отчета:")
+        self.label_date_of_create = tk.Label(self.otchet, text="Дата составления отчета:")
         self.label_date_of_create.grid(row=0, column=0, padx=5, pady=5, sticky="w")
-        self.label_date_of_create = ttk.Entry(self.otchet)
-        self.label_date_of_create.insert(0, f'{current_date.day} {ru_month[current_month-1]} {current_year}')  # Вставка номера отчета в поле ввода
-        self.label_date_of_create.grid(row=0, column=1, padx=5, pady=5)
+        self.entry_date_of_create = ttk.Entry(self.otchet)
+        self.entry_date_of_create.insert(0, f'{current_date.day} {ru_month[current_month - 1]} {current_year}')
+        self.entry_date_of_create.grid(row=0, column=1, padx=5, pady=5)
 
         self.label_evaluation_date = tk.Label(self.otchet, text="Дата оценки:")
-        self.label_evaluation_date.grid(row=4, column=0, padx=5, pady=5, sticky="w")
+        self.label_evaluation_date.grid(row=1, column=0, padx=5, pady=5, sticky="w")
         self.entry_evaluation_date = DateEntry(self.otchet, width=12, background='white', foreground='black',
                                                borderwidth=2)
-        self.entry_evaluation_date.grid(row=4, column=1, padx=5, pady=5)
+        self.entry_evaluation_date.grid(row=1, column=1, padx=5, pady=5)
 
         self.label_number_of_otchet = tk.Label(self.otchet, text="Номер отчета:")
-        self.label_number_of_otchet.grid(row=1, column=0, padx=5, pady=5, sticky="w")
-        self.label_number_of_otchet = ttk.Entry(self.otchet)
-        self.label_number_of_otchet.insert(0, f"/{formatted_month}-{current_year}")  # Вставка номера отчета в поле ввода
-        self.label_number_of_otchet.grid(row=1, column=1, padx=5, pady=5)
+        self.label_number_of_otchet.grid(row=2, column=0, padx=5, pady=5, sticky="w")
+        self.entry_number_of_otchet = ttk.Entry(self.otchet)
+        self.entry_number_of_otchet.insert(0, f"/{formatted_month}-{current_year}")
+        self.entry_number_of_otchet.grid(row=2, column=1, padx=5, pady=5)
+
+    def get_all_field_values(self):
+
+        # Получаем значения из полей вкладки "Клиент"
+        owner_surname = self.entry_owner_surname.get()
+        owner_name = self.entry_owner_name.get()
+        owner_patronymic = self.entry_owner_patronymic.get()
+        owner_address = self.entry_owner_address.get()
+        customer_surname = self.entry_customer_surname.get()
+        customer_name = self.entry_customer_name.get()
+        customer_patronymic = self.entry_customer_patronymic.get()
+
+        # Получаем значения из полей вкладки "Автомобиль"
+        car_brand = self.entry_car_brand.get()
+        car_model = self.entry_car_model.get()
+        type_category = self.entry_type_category.get()
+        country_of_origin = self.entry_country_of_origin.get()
+        vin = self.entry_vin.get()
+        body_number = self.entry_body_number.get()
+        chassis_number = self.entry_chassis_number.get()
+        license_plate_number = self.entry_license_plate_number.get()
+        year_of_manufacture = self.spinbox_year_of_manufacture.get()
+        transmission = self.label_transmission.get()
+        color = self.entry_color.get()
+        number_of_seats = self.entry_number_of_seats.get()
+        engine_power = self.entry_engine_power.get()
+        engine_capacity = self.entry_engine_capacity.get()
+        technical_passport = self.entry_technical_passport.get()
+        srts = self.entry_srts.get()
+
+        # Получаем значения из полей вкладки "Отчет"
+        date_of_create = self.entry_date_of_create.get()
+        evaluation_date = self.entry_evaluation_date.get()
+        number_of_otchet = self.entry_number_of_otchet.get()
+
+        # Возвращаем все значения в виде словаря
+        field_values = {
+            "owner_surname": owner_surname,
+            "owner_name": owner_name,
+            "owner_patronymic": owner_patronymic,
+            "owner_address": owner_address,
+            "customer_surname": customer_surname,
+            "customer_name": customer_name,
+            "customer_patronymic": customer_patronymic,
+            "car_brand": car_brand,
+            "car_model": car_model,
+            "type_category": type_category,
+            "country_of_origin": country_of_origin,
+            "vin": vin,
+            "body_number": body_number,
+            "chassis_number": chassis_number,
+            "license_plate_number": license_plate_number,
+            "year_of_manufacture": year_of_manufacture,
+            "ransmission": transmission
+            "color": color,
+            "number_of_seats": number_of_seats,
+            "engine_power": engine_power,
+            "engine_capacity": engine_capacity,
+            "technical_passport": technical_passport,
+            "srts": srts,
+            "date_of_create": date_of_create,
+            "evaluation_date": evaluation_date,
+            "number_of_otchet": number_of_otchet
+        }
+
+        return field_values
 
 
 
