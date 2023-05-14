@@ -83,19 +83,19 @@ class Application(tk.Frame):
         self.entry_car_brand.grid(row=0, column=1, padx=5, pady=5)
 
         self.label_car_model = tk.Label(self.car, text="Модель:")
-        self.label_car_model.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+        self.label_car_model.grid(row=0, column=2, padx=5, pady=5, sticky="w")
         self.entry_car_model = ttk.Entry(self.car)
-        self.entry_car_model.grid(row=1, column=1, padx=5, pady=5)
+        self.entry_car_model.grid(row=0, column=3, padx=5, pady=5)
 
-        self.label_color = tk.Label(self.car, text="Тип ТС, Категория:")
-        self.label_color.grid(row=8, column=0, padx=5, pady=5, sticky="w")
-        self.entry_color = ttk.Entry(self.car)
-        self.entry_color.grid(row=8, column=1, padx=5, pady=5)
+        self.label_type_category = tk.Label(self.car, text="Тип ТС, Категория:")
+        self.label_type_category.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+        self.entry_type_category = ttk.Entry(self.car)
+        self.entry_type_category.grid(row=1, column=1, padx=5, pady=5)
 
-        self.label_color = tk.Label(self.car, text="Страна производства:")
-        self.label_color.grid(row=8, column=0, padx=5, pady=5, sticky="w")
-        self.entry_color = ttk.Entry(self.car)
-        self.entry_color.grid(row=8, column=1, padx=5, pady=5)
+        self.label_country_of_origin = tk.Label(self.car, text="Страна производства:")
+        self.label_country_of_origin.grid(row=1, column=2, padx=5, pady=5, sticky="w")
+        self.entry_country_of_origin = ttk.Entry(self.car)
+        self.entry_country_of_origin.grid(row=1, column=3, padx=5, pady=5)
 
         self.label_vin = tk.Label(self.car, text="VIN:")
         self.label_vin.grid(row=2, column=0, padx=5, pady=5, sticky="w")
@@ -103,30 +103,39 @@ class Application(tk.Frame):
         self.entry_vin.grid(row=2, column=1, padx=5, pady=5)
 
         self.label_body_number = tk.Label(self.car, text="Номер кузова:")
-        self.label_body_number.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+        self.label_body_number.grid(row=2, column=2, padx=5, pady=5, sticky="w")
         self.entry_body_number = tk.Entry(self.car)
-        self.entry_body_number.grid(row=3, column=1, padx=5, pady=5)
+        self.entry_body_number.grid(row=2, column=3, padx=5, pady=5)
 
         self.label_chassis_number = tk.Label(self.car, text="Номер шасси:")
-        self.label_chassis_number.grid(row=4, column=0, padx=5, pady=5, sticky="w")
+        self.label_chassis_number.grid(row=3, column=0, padx=5, pady=5, sticky="w")
         self.entry_chassis_number = tk.Entry(self.car)
-        self.entry_chassis_number.grid(row=4, column=1, padx=5, pady=5)
+        self.entry_chassis_number.grid(row=3, column=1, padx=5, pady=5)
 
         self.label_license_plate_number = tk.Label(self.car, text="Гос. номер:")
-        self.label_license_plate_number.grid(row=5, column=0, padx=5, pady=5, sticky="w")
+        self.label_license_plate_number.grid(row=3, column=2, padx=5, pady=5, sticky="w")
         self.entry_license_plate_number = tk.Entry(self.car)
-        self.entry_license_plate_number.grid(row=5, column=1, padx=5, pady=5)
+        self.entry_license_plate_number.grid(row=3, column=3, padx=5, pady=5)
 
         self.label_year_of_manufacture = tk.Label(self.car, text="Год выпуска:")
         self.label_year_of_manufacture.grid(row=6, column=0, padx=5, pady=5, sticky="w")
         self.entry_year_of_manufacture = tk.Entry(self.car)
         self.entry_year_of_manufacture.grid(row=6, column=1, padx=5, pady=5)
 
+        self.label_color = tk.Label(self.car, text="Коробка передач:")
+        self.label_color.grid(row=6, column=2, padx=5, pady=5, sticky="w")
+        self.entry_color = ttk.Combobox(self.car, values=['АКПП', 'МКПП'])
+        self.entry_color.grid(row=6, column=3, padx=5, pady=5)
 
         self.label_color = tk.Label(self.car, text="Цвет:")
         self.label_color.grid(row=7, column=0, padx=5, pady=5, sticky="w")
         self.entry_color = ttk.Entry(self.car)
         self.entry_color.grid(row=7, column=1, padx=5, pady=5)
+
+        self.label_color = tk.Label(self.car, text="Число мест:")
+        self.label_color.grid(row=7, column=2, padx=5, pady=5, sticky="w")
+        self.entry_color = ttk.Entry(self.car)
+        self.entry_color.grid(row=7, column=3, padx=5, pady=5)
 
         self.label_color = tk.Label(self.car, text="Мощность двигателя:")
         self.label_color.grid(row=8, column=0, padx=5, pady=5, sticky="w")
@@ -134,29 +143,19 @@ class Application(tk.Frame):
         self.entry_color.grid(row=8, column=1, padx=5, pady=5)
 
         self.label_color = tk.Label(self.car, text="Объем двигателя:")
-        self.label_color.grid(row=8, column=0, padx=5, pady=5, sticky="w")
+        self.label_color.grid(row=8, column=2, padx=5, pady=5, sticky="w")
         self.entry_color = ttk.Entry(self.car)
-        self.entry_color.grid(row=8, column=1, padx=5, pady=5)
-
-        self.label_color = tk.Label(self.car, text="Число мест:")
-        self.label_color.grid(row=8, column=0, padx=5, pady=5, sticky="w")
-        self.entry_color = ttk.Entry(self.car)
-        self.entry_color.grid(row=8, column=1, padx=5, pady=5)
-
-        self.label_color = tk.Label(self.car, text="Коробка передач:")
-        self.label_color.grid(row=9, column=0, padx=5, pady=5, sticky="w")
-        self.entry_color = ttk.Combobox(self.car, values=['АКПП', 'МКПП'])
-        self.entry_color.grid(row=90, column=1, padx=5, pady=5)
+        self.entry_color.grid(row=8, column=3, padx=5, pady=5)
 
         self.label_color = tk.Label(self.car, text="Технический паспорт:")
-        self.label_color.grid(row=9, column=0, padx=5, pady=5, sticky="w")
+        self.label_color.grid(row=10, column=0, padx=5, pady=5, sticky="w")
         self.entry_color = ttk.Entry(self.car)
-        self.entry_color.grid(row=90, column=1, padx=5, pady=5)
+        self.entry_color.grid(row=10, column=1, padx=5, pady=5)
 
-        self.label_color = tk.Label(self.car, text="Свидетесльвто о регестрации ТС:")
-        self.label_color.grid(row=9, column=0, padx=5, pady=5, sticky="w")
+        self.label_color = tk.Label(self.car, text="СРТС:")
+        self.label_color.grid(row=10, column=2, padx=5, pady=5, sticky="w")
         self.entry_color = ttk.Entry(self.car)
-        self.entry_color.grid(row=90, column=1, padx=5, pady=5)
+        self.entry_color.grid(row=10, column=3, padx=5, pady=5)
 
 
 
