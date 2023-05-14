@@ -39,37 +39,37 @@ class Application(tk.Frame):
         # Определяем поля и метки для ввода данных собственника авто
         self.label_owner_surname = tk.Label(self.client, text="Фамилия собственника:")
         self.label_owner_surname.grid(row=0, column=0, padx=5, pady=5, sticky="w")
-        self.entry_owner_surname = ttk.Combobox(self.client)
+        self.entry_owner_surname = ttk.Entry(self.client)
         self.entry_owner_surname.grid(row=0, column=1, padx=5, pady=5)
 
         self.label_owner_name = tk.Label(self.client, text="Имя собственника:")
         self.label_owner_name.grid(row=1, column=0, padx=5, pady=5, sticky="w")
-        self.entry_owner_name = ttk.Combobox(self.client)
+        self.entry_owner_name = ttk.Entry(self.client)
         self.entry_owner_name.grid(row=1, column=1, padx=5, pady=5)
 
         self.label_owner_patronymic = tk.Label(self.client, text="Отчество собственника:")
         self.label_owner_patronymic.grid(row=2, column=0, padx=5, pady=5, sticky="w")
-        self.entry_owner_patronymic = ttk.Combobox(self.client)
+        self.entry_owner_patronymic = ttk.Entry(self.client)
         self.entry_owner_patronymic.grid(row=2, column=1, padx=5, pady=5)
 
         self.label_owner_address = tk.Label(self.client, text="Прописка собственника:")
         self.label_owner_address.grid(row=3, column=0, padx=5, pady=5, sticky="w")
-        self.entry_owner_address = ttk.Combobox(self.client)
+        self.entry_owner_address = ttk.Entry(self.client)
         self.entry_owner_address.grid(row=3, column=1, padx=5, pady=5)
 
         self.label_customer_surname = tk.Label(self.client, text="Фамилия заказчика:")
         self.label_customer_surname.grid(row=4, column=0, padx=5, pady=5, sticky="w")
-        self.entry_customer_surname = ttk.Combobox(self.client)
+        self.entry_customer_surname = ttk.Entry(self.client)
         self.entry_customer_surname.grid(row=4, column=1, padx=5, pady=5)
 
         self.label_customer_name = tk.Label(self.client, text="Имя заказчика:")
         self.label_customer_name.grid(row=5, column=0, padx=5, pady=5, sticky="w")
-        self.entry_customer_name = ttk.Combobox(self.client)
+        self.entry_customer_name = ttk.Entry(self.client)
         self.entry_customer_name.grid(row=5, column=1, padx=5, pady=5)
 
         self.label_customer_patronymic = tk.Label(self.client, text="Отчество заказчика:")
         self.label_customer_patronymic.grid(row=6, column=0, padx=5, pady=5, sticky="w")
-        self.entry_customer_patronymic = ttk.Combobox(self.client)
+        self.entry_customer_patronymic = ttk.Entry(self.client)
         self.entry_customer_patronymic.grid(row=6, column=1, padx=5, pady=5)
 
     def car_tab(self):
@@ -246,32 +246,32 @@ class Application(tk.Frame):
 
         # Replace the placeholders with the chosen data
         context = {
-            "owner_surname": self.entry_owner_surname.get()
-            # "owner_name": self.entry_owner_name.get(),
-            # "owner_patronymic": self.entry_owner_patronymic.get(),
-            # "owner_address": self.entry_owner_address.get(),
-            # "customer_surname": self.entry_customer_surname.get(),
-            # "customer_name": self.entry_customer_name.get(),
-            # "customer_patronymic": self.entry_customer_patronymic.get(),
-            # "car_brand": self.entry_car_brand.get(),
-            # "car_model": self.entry_car_model.get(),
-            # "type_category": self.entry_type_category.get(),
-            # "country_of_origin": self.entry_country_of_origin.get(),
-            # "vin": self.entry_vin.get(),
-            # "body_number": self.entry_body_number.get(),
-            # "chassis_number": self.entry_chassis_number.get(),
-            # "license_plate_number": self.entry_license_plate_number.get(),
-            # "year_of_manufacture": self.spinbox_year_of_manufacture.get(),
-            # "transmission": self.label_transmission.get(),
-            # "color": self.entry_color.get(),
-            # "number_of_seats": self.entry_number_of_seats.get(),
-            # "engine_power": self.entry_engine_power.get(),
-            # "engine_capacity": self.entry_engine_capacity.get(),
-            # "technical_passport": self.entry_technical_passport.get(),
-            # "srts": self.entry_srts.get(),
-            # "date_of_create": self.entry_date_of_create.get(),
-            # "evaluation_date": self.entry_evaluation_date.get(),
-            # "number_of_otchet": self.entry_number_of_otchet.get()
+            "owner_surname": self.entry_owner_surname.get(),
+            "owner_name": self.entry_owner_name.get(),
+            "owner_patronymic": self.entry_owner_patronymic.get(),
+            "owner_address": self.entry_owner_address.get(),
+            "customer_surname": self.entry_customer_surname.get(),
+            "customer_name": self.entry_customer_name.get(),
+            "customer_patronymic": self.entry_customer_patronymic.get(),
+            "car_brand": self.entry_car_brand.get(),
+            "car_model": self.entry_car_model.get(),
+            "type_category": self.entry_type_category.get(),
+            "country_of_origin": self.entry_country_of_origin.get(),
+            "vin": self.entry_vin.get(),
+            "body_number": self.entry_body_number.get(),
+            "chassis_number": self.entry_chassis_number.get(),
+            "license_plate_number": self.entry_license_plate_number.get(),
+            "year_of_manufacture": self.spinbox_year_of_manufacture.get(),
+            "transmission": self.label_transmission.get(),
+            "color": self.entry_color.get(),
+            "number_of_seats": self.entry_number_of_seats.get(),
+            "engine_power": self.entry_engine_power.get(),
+            "engine_capacity": self.entry_engine_capacity.get(),
+            "technical_passport": self.entry_technical_passport.get(),
+            "srts": self.entry_srts.get(),
+            "date_of_create": self.entry_date_of_create.get(),
+            "evaluation_date": self.entry_evaluation_date.get(),
+            "number_of_otchet": self.entry_number_of_otchet.get()
         }
 
         # Render the template with the context
