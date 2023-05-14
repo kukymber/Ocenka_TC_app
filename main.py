@@ -118,14 +118,14 @@ class Application(tk.Frame):
         self.entry_license_plate_number.grid(row=3, column=3, padx=5, pady=5)
 
         self.label_year_of_manufacture = tk.Label(self.car, text="Год выпуска:")
-        self.label_year_of_manufacture.grid(row=6, column=0, padx=5, pady=5, sticky="w")
-        self.entry_year_of_manufacture = tk.Entry(self.car)
-        self.entry_year_of_manufacture.grid(row=6, column=1, padx=5, pady=5)
+        self.label_year_of_manufacture.grid(row=4, column=0, padx=5, pady=5, sticky="w")
+        self.spinbox_year_of_manufacture = tk.Spinbox(self.car, from_=1900, to=2050, increment=1)
+        self.spinbox_year_of_manufacture.grid(row=4, column=1, padx=5, pady=5)
 
         self.label_color = tk.Label(self.car, text="Коробка передач:")
-        self.label_color.grid(row=6, column=2, padx=5, pady=5, sticky="w")
+        self.label_color.grid(row=4, column=2, padx=5, pady=5, sticky="w")
         self.entry_color = ttk.Combobox(self.car, values=['АКПП', 'МКПП'])
-        self.entry_color.grid(row=6, column=3, padx=5, pady=5)
+        self.entry_color.grid(row=4, column=3, padx=5, pady=5)
 
         self.label_color = tk.Label(self.car, text="Цвет:")
         self.label_color.grid(row=7, column=0, padx=5, pady=5, sticky="w")
@@ -134,17 +134,17 @@ class Application(tk.Frame):
 
         self.label_color = tk.Label(self.car, text="Число мест:")
         self.label_color.grid(row=7, column=2, padx=5, pady=5, sticky="w")
-        self.entry_color = ttk.Entry(self.car)
+        self.entry_color = tk.Spinbox(self.car, from_=1, to=200, increment=1)
         self.entry_color.grid(row=7, column=3, padx=5, pady=5)
 
         self.label_color = tk.Label(self.car, text="Мощность двигателя:")
         self.label_color.grid(row=8, column=0, padx=5, pady=5, sticky="w")
-        self.entry_color = ttk.Entry(self.car)
+        self.entry_color = tk.Spinbox(self.car, from_=1, to=1500, increment=1)
         self.entry_color.grid(row=8, column=1, padx=5, pady=5)
 
         self.label_color = tk.Label(self.car, text="Объем двигателя:")
         self.label_color.grid(row=8, column=2, padx=5, pady=5, sticky="w")
-        self.entry_color = ttk.Entry(self.car)
+        self.entry_color = tk.Spinbox(self.car, from_=1, to=10000, increment=1)
         self.entry_color.grid(row=8, column=3, padx=5, pady=5)
 
         self.label_color = tk.Label(self.car, text="Технический паспорт:")
