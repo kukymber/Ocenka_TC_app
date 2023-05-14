@@ -76,6 +76,13 @@ class Application(tk.Frame):
         self.entry_customer_patronymic.grid(row=7, column=1, padx=5, pady=5)
 
     def car_tab(self):
+
+        def validate_entry_length(entry_text):
+            if len(entry_text) <= 17:
+                return True
+            else:
+                return False
+
         # Определяем поля и метки для ввода данных об авто
         self.label_car_brand = tk.Label(self.car, text="Марка:")
         self.label_car_brand.grid(row=0, column=0, padx=5, pady=5, sticky="w")
@@ -99,7 +106,8 @@ class Application(tk.Frame):
 
         self.label_vin = tk.Label(self.car, text="VIN:")
         self.label_vin.grid(row=2, column=0, padx=5, pady=5, sticky="w")
-        self.entry_vin = tk.Entry(self.car)
+        self.entry_vin = tk.Entry(self.car, validate="key")
+        self.entry_vin['validatecommand'] = (self.entry_vin.register(validate_entry_length), '%P')
         self.entry_vin.grid(row=2, column=1, padx=5, pady=5)
 
         self.label_body_number = tk.Label(self.car, text="Номер кузова:")
@@ -156,6 +164,12 @@ class Application(tk.Frame):
         self.label_color.grid(row=10, column=2, padx=5, pady=5, sticky="w")
         self.entry_color = ttk.Entry(self.car)
         self.entry_color.grid(row=10, column=3, padx=5, pady=5)
+
+        def validate_entry_length(entry_text):
+            if len(entry_text) <= 17:
+                return True
+            else:
+                return False
 
 
 
