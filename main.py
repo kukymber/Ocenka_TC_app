@@ -200,68 +200,72 @@ class Application(tk.Frame):
         self.entry_number_of_otchet.insert(0, f"/{formatted_month}-{current_year}")
         self.entry_number_of_otchet.grid(row=2, column=1, padx=5, pady=5)
 
+        self.button_generate_report = ttk.Button(self.otchet, text="Сгенерировать отчет",
+                                                 command=self.get_all_field_values)
+        self.button_generate_report.grid(row=5, column=0, padx=5, pady=5)
+
     def get_all_field_values(self):
 
         # Получаем значения из полей вкладки "Клиент"
-        owner_surname = self.entry_owner_surname.get()
-        owner_name = self.entry_owner_name.get()
-        owner_patronymic = self.entry_owner_patronymic.get()
-        owner_address = self.entry_owner_address.get()
-        customer_surname = self.entry_customer_surname.get()
-        customer_name = self.entry_customer_name.get()
-        customer_patronymic = self.entry_customer_patronymic.get()
-
-        # Получаем значения из полей вкладки "Автомобиль"
-        car_brand = self.entry_car_brand.get()
-        car_model = self.entry_car_model.get()
-        type_category = self.entry_type_category.get()
-        country_of_origin = self.entry_country_of_origin.get()
-        vin = self.entry_vin.get()
-        body_number = self.entry_body_number.get()
-        chassis_number = self.entry_chassis_number.get()
-        license_plate_number = self.entry_license_plate_number.get()
-        year_of_manufacture = self.spinbox_year_of_manufacture.get()
-        transmission = self.label_transmission.get()
-        color = self.entry_color.get()
-        number_of_seats = self.entry_number_of_seats.get()
-        engine_power = self.entry_engine_power.get()
-        engine_capacity = self.entry_engine_capacity.get()
-        technical_passport = self.entry_technical_passport.get()
-        srts = self.entry_srts.get()
-
-        # Получаем значения из полей вкладки "Отчет"
-        date_of_create = self.entry_date_of_create.get()
-        evaluation_date = self.entry_evaluation_date.get()
-        number_of_otchet = self.entry_number_of_otchet.get()
+        # owner_surname = self.entry_owner_surname.get()
+        # owner_name = self.entry_owner_name.get()
+        # owner_patronymic = self.entry_owner_patronymic.get()
+        # owner_address = self.entry_owner_address.get()
+        # customer_surname = self.entry_customer_surname.get()
+        # customer_name = self.entry_customer_name.get()
+        # customer_patronymic = self.entry_customer_patronymic.get()
+        #
+        # # Получаем значения из полей вкладки "Автомобиль"
+        # car_brand = self.entry_car_brand.get()
+        # car_model = self.entry_car_model.get()
+        # type_category = self.entry_type_category.get()
+        # country_of_origin = self.entry_country_of_origin.get()
+        # vin = self.entry_vin.get()
+        # body_number = self.entry_body_number.get()
+        # chassis_number = self.entry_chassis_number.get()
+        # license_plate_number = self.entry_license_plate_number.get()
+        # year_of_manufacture = self.spinbox_year_of_manufacture.get()
+        # transmission = self.label_transmission.get()
+        # color = self.entry_color.get()
+        # number_of_seats = self.entry_number_of_seats.get()
+        # engine_power = self.entry_engine_power.get()
+        # engine_capacity = self.entry_engine_capacity.get()
+        # technical_passport = self.entry_technical_passport.get()
+        # srts = self.entry_srts.get()
+        #
+        # # Получаем значения из полей вкладки "Отчет"
+        # date_of_create = self.entry_date_of_create.get()
+        # evaluation_date = self.entry_evaluation_date.get()
+        # number_of_otchet = self.entry_number_of_otchet.get()
 
         # Возвращаем все значения в виде словаря
         field_values = {
-            "owner_surname": owner_surname,
-            "owner_name": owner_name,
-            "owner_patronymic": owner_patronymic,
-            "owner_address": owner_address,
-            "customer_surname": customer_surname,
-            "customer_name": customer_name,
-            "customer_patronymic": customer_patronymic,
-            "car_brand": car_brand,
-            "car_model": car_model,
-            "type_category": type_category,
-            "country_of_origin": country_of_origin,
-            "vin": vin,
-            "body_number": body_number,
-            "chassis_number": chassis_number,
-            "license_plate_number": license_plate_number,
-            "year_of_manufacture": year_of_manufacture,
-            "ransmission": transmission
-            "color": color,
-            "number_of_seats": number_of_seats,
-            "engine_power": engine_power,
-            "engine_capacity": engine_capacity,
-            "technical_passport": technical_passport,
-            "srts": srts,
-            "date_of_create": date_of_create,
-            "evaluation_date": evaluation_date,
-            "number_of_otchet": number_of_otchet
+            "owner_surname": self.entry_owner_surname.get(),
+            "owner_name": self.entry_owner_name.get(),
+            "owner_patronymic": self.entry_owner_patronymic.get(),
+            "owner_address": self.entry_owner_address.get(),
+            "customer_surname": self.entry_customer_surname.get(),
+            "customer_name": self.entry_customer_name.get(),
+            "customer_patronymic": self.entry_customer_patronymic.get(),
+            "car_brand": self.entry_car_brand.get(),
+            "car_model": self.entry_car_model.get(),
+            "type_category": self.entry_type_category.get(),
+            "country_of_origin": self.entry_country_of_origin.get(),
+            "vin": self.entry_vin.get(),
+            "body_number": self.entry_body_number.get(),
+            "chassis_number": self.entry_chassis_number.get(),
+            "license_plate_number": self.entry_license_plate_number.get(),
+            "year_of_manufacture": self.spinbox_year_of_manufacture.get(),
+            "ransmission": self.spinbox_year_of_manufacture.get(),
+            "color": self.entry_color.get(),
+            "number_of_seats": self.entry_number_of_seats.get(),
+            "engine_power": self.entry_engine_power.get(),
+            "engine_capacity": self.entry_engine_capacity.get(),
+            "technical_passport": self.entry_technical_passport.get(),
+            "srts": self.entry_srts.get(),
+            "date_of_create": self.entry_date_of_create.get(),
+            "evaluation_date": self.entry_evaluation_date.get(),
+            "number_of_otchet": self.entry_number_of_otchet.get()
         }
 
         return field_values
