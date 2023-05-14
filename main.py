@@ -1,10 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
-from PIL import Image, ImageTk
-import pytesseract
-import cv2
 from tkinter import filedialog
 
+import datetime
+import calendar
 class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
@@ -177,7 +176,32 @@ class Application(tk.Frame):
     def analog_cars_tab(self):
         pass
     def otchet_tab(self):
-        pass
+
+        # Получение текущей даты
+        current_date = datetime.date.today()
+        current_month = current_date.month
+        current_year = current_date.year
+        formatted_month = str(current_month).zfill(2)
+        ru_month = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября',
+                    'ноября', 'декабря']
+
+
+        # Определяем поля и метки для ввода данных об отчете
+        self.label_date_of_create = tk.Label(self.otchet, text="Дата состовления отчета:")
+        self.label_date_of_create.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        self.label_date_of_create = ttk.Entry(self.otchet)
+        self.label_date_of_create.insert(0, f'{current_date.day} {ru_month[current_month-1]} {current_year}')  # Вставка номера отчета в поле ввода
+        self.label_date_of_create.grid(row=0, column=1, padx=5, pady=5)
+
+        self.label_number_of_otchet = tk.Label(self.otchet, text="Номер отчета:")
+        self.label_number_of_otchet.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+        self.label_number_of_otchet = ttk.Entry(self.otchet)
+        self.label_number_of_otchet.insert(0, f"/{formatted_month}-{current_year}")  # Вставка номера отчета в поле ввода
+        self.label_number_of_otchet.grid(row=1, column=1, padx=5, pady=5)
+
+
+
+
 
 if __name__ == '__main__':
     root = tk.Tk()
