@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkcalendar import DateEntry
 from tkinter import filedialog
 
 import datetime
@@ -54,25 +55,20 @@ class Application(tk.Frame):
         self.entry_owner_address = ttk.Combobox(self.client)
         self.entry_owner_address.grid(row=3, column=1, padx=5, pady=5)
 
-        self.label_evaluation_date = tk.Label(self.client, text="Дата оценки:")
-        self.label_evaluation_date.grid(row=4, column=0, padx=5, pady=5, sticky="w")
-        self.entry_evaluation_date = ttk.Combobox(self.client)
-        self.entry_evaluation_date.grid(row=4, column=1, padx=5, pady=5)
-
         self.label_customer_surname = tk.Label(self.client, text="Фамилия заказчика:")
-        self.label_customer_surname.grid(row=5, column=0, padx=5, pady=5, sticky="w")
+        self.label_customer_surname.grid(row=4, column=0, padx=5, pady=5, sticky="w")
         self.entry_customer_surname = ttk.Combobox(self.client)
-        self.entry_customer_surname.grid(row=5, column=1, padx=5, pady=5)
+        self.entry_customer_surname.grid(row=4, column=1, padx=5, pady=5)
 
         self.label_customer_name = tk.Label(self.client, text="Имя заказчика:")
-        self.label_customer_name.grid(row=6, column=0, padx=5, pady=5, sticky="w")
+        self.label_customer_name.grid(row=5, column=0, padx=5, pady=5, sticky="w")
         self.entry_customer_name = ttk.Combobox(self.client)
-        self.entry_customer_name.grid(row=6, column=1, padx=5, pady=5)
+        self.entry_customer_name.grid(row=5, column=1, padx=5, pady=5)
 
         self.label_customer_patronymic = tk.Label(self.client, text="Отчество заказчика:")
-        self.label_customer_patronymic.grid(row=7, column=0, padx=5, pady=5, sticky="w")
+        self.label_customer_patronymic.grid(row=6, column=0, padx=5, pady=5, sticky="w")
         self.entry_customer_patronymic = ttk.Combobox(self.client)
-        self.entry_customer_patronymic.grid(row=7, column=1, padx=5, pady=5)
+        self.entry_customer_patronymic.grid(row=6, column=1, padx=5, pady=5)
 
     def car_tab(self):
 
@@ -192,6 +188,12 @@ class Application(tk.Frame):
         self.label_date_of_create = ttk.Entry(self.otchet)
         self.label_date_of_create.insert(0, f'{current_date.day} {ru_month[current_month-1]} {current_year}')  # Вставка номера отчета в поле ввода
         self.label_date_of_create.grid(row=0, column=1, padx=5, pady=5)
+
+        self.label_evaluation_date = tk.Label(self.otchet, text="Дата оценки:")
+        self.label_evaluation_date.grid(row=4, column=0, padx=5, pady=5, sticky="w")
+        self.entry_evaluation_date = DateEntry(self.otchet, width=12, background='white', foreground='black',
+                                               borderwidth=2)
+        self.entry_evaluation_date.grid(row=4, column=1, padx=5, pady=5)
 
         self.label_number_of_otchet = tk.Label(self.otchet, text="Номер отчета:")
         self.label_number_of_otchet.grid(row=1, column=0, padx=5, pady=5, sticky="w")
