@@ -8,8 +8,23 @@ from docxtpl import DocxTemplate
 import datetime
 import calendar
 class Application(tk.Frame):
+
     def __init__(self, master=None):
         super().__init__(master)
+        self.ru_month = {
+            1: 'января',
+            2: 'февраля',
+            3: 'марта',
+            4: 'апреля',
+            5: 'мая',
+            6: 'июня',
+            7: 'июля',
+            8: 'августа',
+            9: 'сентября',
+            10: 'октября',
+            11: 'ноября',
+            12: 'декабря'
+        }
         self.master = master
         self.master.title("Оценка авто")
         self.master.geometry("800x600")
@@ -19,6 +34,7 @@ class Application(tk.Frame):
         self.car_tab()
         self.analog_cars_tab()
         self.otchet_tab()
+
 
     def create_widgets(self):
         # Создаем вкладки
@@ -180,14 +196,15 @@ class Application(tk.Frame):
         current_month = current_date.month
         current_year = current_date.year
         formatted_month = str(current_month).zfill(2)
-        ru_month = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября',
-                    'ноября', 'декабря']
+        # ru_month = {1: 'января', 2: 'февраля', 3: 'марта', 4: 'апреля', 5: 'мая', 6: 'июня', 7: 'июля', 8: 'августа',
+        #             9: 'сентября', 10: 'октября', 11: 'ноября', 12: 'декабря'}
+
 
         # Определяем поля и метки для ввода данных об отчете
         self.label_date_of_create = tk.Label(self.otchet, text="Дата составления отчета:")
         self.label_date_of_create.grid(row=0, column=0, padx=5, pady=5, sticky="w")
         self.entry_date_of_create = ttk.Entry(self.otchet)
-        self.entry_date_of_create.insert(0, f'{current_date.day} {ru_month[current_month - 1]} {current_year}')
+        self.entry_date_of_create.insert(0, f'{current_date.day} {self.ru_month[current_month]} {current_year}')
         self.entry_date_of_create.grid(row=0, column=1, padx=5, pady=5)
 
         self.label_evaluation_date = tk.Label(self.otchet, text="Дата оценки:")
@@ -206,43 +223,11 @@ class Application(tk.Frame):
                                                  command=self.generate_word_file)
         self.button_generate_report.grid(row=5, column=0, padx=5, pady=5)
 
-    def get_all_field_values(self):
-
-        # Возвращаем все значения в виде словаря
-        field_values = {
-            "owner_surname": self.entry_owner_surname.get(),
-            "owner_name": self.entry_owner_name.get(),
-            "owner_patronymic": self.entry_owner_patronymic.get(),
-            "owner_address": self.entry_owner_address.get(),
-            "customer_surname": self.entry_customer_surname.get(),
-            "customer_name": self.entry_customer_name.get(),
-            "customer_patronymic": self.entry_customer_patronymic.get(),
-            "car_brand": self.entry_car_brand.get(),
-            "car_model": self.entry_car_model.get(),
-            "type_category": self.entry_type_category.get(),
-            "country_of_origin": self.entry_country_of_origin.get(),
-            "vin": self.entry_vin.get(),
-            "body_number": self.entry_body_number.get(),
-            "chassis_number": self.entry_chassis_number.get(),
-            "license_plate_number": self.entry_license_plate_number.get(),
-            "year_of_manufacture": self.spinbox_year_of_manufacture.get(),
-            "transmission": self.label_transmission.get(),
-            "color": self.entry_color.get(),
-            "number_of_seats": self.entry_number_of_seats.get(),
-            "engine_power": self.entry_engine_power.get(),
-            "engine_capacity": self.entry_engine_capacity.get(),
-            "technical_passport": self.entry_technical_passport.get(),
-            "srts": self.entry_srts.get(),
-            "date_of_create": self.entry_date_of_create.get(),
-            "evaluation_date": self.entry_evaluation_date.get(),
-            "number_of_otchet": self.entry_number_of_otchet.get()
-        }
-
-        return field_values
 
     def generate_word_file(self):
 
         template = DocxTemplate('/home/anatolii/python_project/pythonProjectOcenka/exm.docx')
+        month, day, year = self.entry_evaluation_date.get().split("/")
 
         # Replace the placeholders with the chosen data
         context = {
@@ -270,7 +255,7 @@ class Application(tk.Frame):
             "technical_passport": self.entry_technical_passport.get(),
             "srts": self.entry_srts.get(),
             "date_of_create": self.entry_date_of_create.get(),
-            "evaluation_date": self.entry_evaluation_date.get(),
+            "evaluation_date": f'{day} {self.ru_month[int(month)]} 20{year} года',
             "number_of_otchet": self.entry_number_of_otchet.get()
         }
 
