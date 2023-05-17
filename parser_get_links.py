@@ -16,23 +16,31 @@ def parse_page(html):
 
     # Находим элемент с указанным классом
     fact_element = soup.find('div', class_=class_name)
-    print(fact_element)
-    # Проверяем наличие элемента
-    if fact_element:
-        # Извлекаем ссылки из элемента
-        for link in fact_element.find_all('a', href=True):
-            link_href = link['href']
-            links.append(link_href)
+    # Извлекаем ссылки из элементов и добавляем их в список
+    for link in fact_element.find_all('a', href=True):
+        link_href = link['href']
+        links.append(link_href)
 
     return links
 
 # Основная часть программы
 if __name__ == '__main__':
-    url = 'https://auto.drom.ru/region38/toyota/probox/year-2004/'
-    html = get_html(url)
-    fact_links = parse_page(html)
+    base_url = 'https://auto.drom.ru/region38/toyota/probox/year-2005/'
+    links = []
+    current_url = base_url
 
-    # Выводим полученные ссылки на факты продаж
-    print('Ссылки на факты продаж:')
-    for link in fact_links:
-        print(link)
+    if len(links) < 5:
+        links = []
+        start_year = int((current_url.split('-')[-1])[:4])
+        current_url = base_url.replace(f'year-{start_year}/', f'?minyear={start_year - 1}&maxyear={start_year + 1}/')
+        html = get_html(current_url)
+        print('Ссылки на факты продаж:')
+        fact_links = parse_page(html)
+        for link in fact_links:
+            print(link)
+        # print(fact_links)
+    else:
+         # Выводим полученные ссылки на факты продаж
+        print('Ссылки на факты продаж:')
+        for link in links:
+            print(link)
