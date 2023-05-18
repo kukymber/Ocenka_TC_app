@@ -197,6 +197,8 @@ class Application(tk.Frame):
 
 
     def analog_cars_tab(self):
+        # self.extract_prices()
+        self.variance = float
         # Инициализируем экземпляр CarScraper
         self.car = CarScraper('toyota', 'probox', '2004')
         self.car_data = self.car.scrape()
@@ -225,19 +227,48 @@ class Application(tk.Frame):
 
     def add_analog(self):
         index = self.listbox1.curselection()
-        if index:
-            selected_item = self.listbox1.get(index)
-            self.listbox2.insert(tk.END, selected_item)
-            self.update_average_price()
+        if not index:
+            return
 
-            # Создаем словарь с данными об аналогах автомобилей
-            analog_data = {
-                "year": selected_item.split('Год выпуска: ')[1].strip(),
-                "price": selected_item.split('Цена: ')[1].split('₽')[0].strip()
-            }
+        selected_item = self.listbox1.get(index)
+        self.listbox2.insert(tk.END, selected_item)
 
-            # Добавляем данные об аналоге в список аналогов
-            self.analog_cars_data.append(analog_data)
+        analog_data = {
+            "year": selected_item.split('Год выпуска: ')[1].strip(),
+            "price": selected_item.split('Цена: ')[1].split('₽')[0].strip()
+        }
+
+        self.analog_cars_data.append(analog_data)
+        prices = self.extract_prices(self.analog_cars_data)
+        variance = self.calculate_variance(prices)
+
+        self.update_average_price()
+
+    def extract_prices(self, data):
+        prices = []  # Создаем пустой список для хранения цен
+        for item in data:
+            price = item.get('price')  # Используем ключ 'price' для получения значения цены из словаря
+            if price is not None:
+                prices.append(float(price))  # Преобразуем цену в число с плавающей точкой и добавляем в список
+        return prices
+
+    def calculate_variance(self, prices):
+        n = len(prices)  # Количество цен
+        if n < 2:
+            return 0.0  # Если цен меньше 2, то дисперсия будет равна 0
+
+        mean = sum(prices) / n  # Среднее значение цен
+        variance = sum((x - mean) ** 2 for x in prices) / (n - 1)  # Вычисление выборочной дисперсии
+        return variance
+
+    def get_stats(self):
+        prices = self.extract_prices(self.analog_cars_data)
+        return {
+            "variance": self.calculate_variance(prices),
+            "average_price": self.calculate_average_price(),
+            "min_price": min(prices),
+            "max_price": max(prices),
+        }
 
     def remove_analog(self):
         index = self.listbox2.curselection()
@@ -302,6 +333,7 @@ class Application(tk.Frame):
         template = DocxTemplate('/home/anatolii/python_project/pythonProjectOcenka/exm.docx')
         month, day, year = self.entry_evaluation_date.get().split("/")
         print(self.analog_cars_data)
+        car_stats = self.get_stats()
 
         # Replace the placeholders with the chosen data
         context = {
@@ -344,6 +376,11 @@ class Application(tk.Frame):
 
             "analog4_year": self.analog_cars_data[3]["year"] if len(self.analog_cars_data) >= 4 else "",
             "analog4_price": self.analog_cars_data[3]["price"] if len(self.analog_cars_data) >= 4 else "",
+
+            "variance": car_stats["variance"],
+            "average_price": car_stats["average_price"],
+            "min_price": car_stats["min_price"],
+            "max_price": car_stats["max_price"]
         }
 
         # Render the template with the context
