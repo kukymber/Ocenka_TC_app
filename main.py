@@ -7,6 +7,10 @@ from docxtpl import DocxTemplate
 
 import datetime
 import calendar
+
+from test_get_price_and_year_form_links import CarScraper
+
+
 class Application(tk.Frame):
 
     def __init__(self, master=None):
@@ -25,15 +29,21 @@ class Application(tk.Frame):
             11: 'ноября',
             12: 'декабря'
         }
+
         self.master = master
         self.master.title("Оценка авто")
         self.master.geometry("800x600")
         self.pack(fill=tk.BOTH, expand=True)
         self.create_widgets()
         self.client_tab()
+        self.average_price_var = tk.StringVar()
+        self.average_price_minus_5_var = tk.StringVar()
+        self.entry_average_price = tk.Entry(self.master)
+        self.entry_average_price.pack()
         self.car_tab()
         self.analog_cars_tab()
         self.otchet_tab()
+
 
 
     def create_widgets(self):
@@ -185,10 +195,59 @@ class Application(tk.Frame):
                 return False
 
 
-
-
     def analog_cars_tab(self):
-        pass
+        # Инициализируем экземпляр CarScraper
+        self.car = CarScraper('toyota', 'probox', '2004')
+        self.car_data = self.car.scrape()
+
+        self.listbox1 = tk.Listbox(self.analog_cars)
+        self.listbox1.pack(expand=True, fill="both", padx=10, pady=10)
+
+        for link, data in self.car_data.items():
+            self.listbox1.insert(tk.END, f"Цена: {data['price']}₽, Год выпуска: {data['year']}")
+
+        self.listbox2 = tk.Listbox(self.analog_cars)
+        self.listbox2.pack(expand=True, fill="both", padx=10, pady=10)
+
+        self.add_button = tk.Button(self.analog_cars, text="Добавить", command=self.add_analog)
+        self.add_button.pack(side=tk.LEFT, padx=10, pady=5)
+
+        self.remove_button = tk.Button(self.analog_cars, text="Удалить", command=self.remove_analog)
+        self.remove_button.pack(side=tk.LEFT, padx=10, pady=5)
+
+    def update_average_price(self):
+        average_price = self.calculate_average_price()
+        self.average_price_var.set(f"Средняя цена: {round(average_price,2)}₽")
+        self.average_price_minus_5_var.set(f"Средняя цена (с учетом 5% поправочного коэффицента): {round(average_price * 0.95, 2)}₽")
+        self.entry_average_price.delete(0, tk.END)
+        self.entry_average_price.insert(0, str(average_price))
+
+    def add_analog(self):
+        index = self.listbox1.curselection()
+        if index:
+            selected_item = self.listbox1.get(index)
+            self.listbox2.insert(tk.END, selected_item)
+            self.update_average_price()
+
+    def remove_analog(self):
+        index = self.listbox2.curselection()
+        if index:
+            self.listbox2.delete(index)
+            self.update_average_price()
+
+    def calculate_average_price(self):
+        total_price = 0
+        number_of_cars = 0
+
+        for car in self.listbox2.get(0, tk.END):
+            price = int(car.split(':')[1].split('₽')[0].strip())
+            total_price += price
+            number_of_cars += 1
+
+        if number_of_cars == 0:
+            return 0  # или любое другое значение по умолчанию
+        else:
+            return total_price / number_of_cars
 
     def otchet_tab(self):
         # Получение текущей даты
@@ -223,6 +282,11 @@ class Application(tk.Frame):
                                                  command=self.generate_word_file)
         self.button_generate_report.grid(row=5, column=0, padx=5, pady=5)
 
+        self.label_average_price = tk.Label(self.otchet, textvariable=self.average_price_var)
+        self.label_average_price.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+
+        self.label_average_price_minus_5 = tk.Label(self.otchet, textvariable=self.average_price_minus_5_var)
+        self.label_average_price_minus_5.grid(row=4, column=0, padx=5, pady=5, sticky="w")
 
     def generate_word_file(self):
 
