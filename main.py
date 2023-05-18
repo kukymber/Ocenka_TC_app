@@ -15,6 +15,7 @@ class Application(tk.Frame):
 
     def __init__(self, master=None):
         super().__init__(master)
+        self.analog_cars_data = []
         self.ru_month = {
             1: 'января',
             2: 'февраля',
@@ -229,6 +230,15 @@ class Application(tk.Frame):
             self.listbox2.insert(tk.END, selected_item)
             self.update_average_price()
 
+            # Создаем словарь с данными об аналогах автомобилей
+            analog_data = {
+                "year": selected_item.split('Год выпуска: ')[1].strip(),
+                "price": selected_item.split('Цена: ')[1].split('₽')[0].strip()
+            }
+
+            # Добавляем данные об аналоге в список аналогов
+            self.analog_cars_data.append(analog_data)
+
     def remove_analog(self):
         index = self.listbox2.curselection()
         if index:
@@ -255,9 +265,8 @@ class Application(tk.Frame):
         current_month = current_date.month
         current_year = current_date.year
         formatted_month = str(current_month).zfill(2)
-        # ru_month = {1: 'января', 2: 'февраля', 3: 'марта', 4: 'апреля', 5: 'мая', 6: 'июня', 7: 'июля', 8: 'августа',
-        #             9: 'сентября', 10: 'октября', 11: 'ноября', 12: 'декабря'}
-
+        # index = self.listbox2.curselection()
+        # selected_analog = self.listbox2.get(index)
 
         # Определяем поля и метки для ввода данных об отчете
         self.label_date_of_create = tk.Label(self.otchet, text="Дата составления отчета:")
@@ -292,6 +301,7 @@ class Application(tk.Frame):
 
         template = DocxTemplate('/home/anatolii/python_project/pythonProjectOcenka/exm.docx')
         month, day, year = self.entry_evaluation_date.get().split("/")
+        print(self.analog_cars_data)
 
         # Replace the placeholders with the chosen data
         context = {
@@ -320,7 +330,20 @@ class Application(tk.Frame):
             "srts": self.entry_srts.get(),
             "date_of_create": self.entry_date_of_create.get(),
             "evaluation_date": f'{day} {self.ru_month[int(month)]} 20{year} года',
-            "number_of_otchet": self.entry_number_of_otchet.get()
+            "number_of_otchet": self.entry_number_of_otchet.get(),
+
+
+            "analog1_year": self.analog_cars_data[0]["year"] if len(self.analog_cars_data) >= 1 else "",
+            "analog1_price": self.analog_cars_data[0]["price"] if len(self.analog_cars_data) >= 1 else "",
+
+            "analog2_year": self.analog_cars_data[1]["year"] if len(self.analog_cars_data) >= 2 else "",
+            "analog2_price": self.analog_cars_data[1]["price"] if len(self.analog_cars_data) >= 2 else "",
+
+            "analog3_year": self.analog_cars_data[2]["year"] if len(self.analog_cars_data) >= 3 else "",
+            "analog3_price": self.analog_cars_data[2]["price"] if len(self.analog_cars_data) >= 3 else "",
+
+            "analog4_year": self.analog_cars_data[3]["year"] if len(self.analog_cars_data) >= 4 else "",
+            "analog4_price": self.analog_cars_data[3]["price"] if len(self.analog_cars_data) >= 4 else "",
         }
 
         # Render the template with the context
