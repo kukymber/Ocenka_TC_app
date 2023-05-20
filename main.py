@@ -2,12 +2,10 @@ import tkinter as tk
 import webbrowser
 from tkinter import ttk, messagebox
 from tkcalendar import DateEntry
-from tkinter import filedialog
 
 from docxtpl import DocxTemplate
 
 import datetime
-import calendar
 
 from formula_average_price import PriceCalculator
 from test_get_price_and_year_form_links import CarScraper
@@ -18,9 +16,7 @@ class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.analog_cars_data = []
-
-
-
+            # !!!
         self.master = master
         self.master.title("Оценка авто")
         self.master.geometry("800x600")
@@ -32,9 +28,7 @@ class Application(tk.Frame):
         self.entry_average_price = tk.Entry(self.master)
         self.entry_average_price.pack()
         self.car_tab()
-        # self.analog_cars_tab()
         self.otchet_tab()
-        # self.listbox1.bind("<Double-Button-1>", self.listbox1_double_click)
         self.price_calculator = PriceCalculator()
 
 
@@ -204,34 +198,8 @@ class Application(tk.Frame):
         self.submit_button = tk.Button(self.car, text="Submit", command=get_and_scrape)
         self.submit_button.grid(row=11, column=0, padx=5, pady=5)
 
-        # def get_and_scrape():
-        #     get_and_scrape()
-        #     self.analog_cars_tab()
-        #     try:
-        #         brand = self.entry_car_brand.get()
-        #         model = self.entry_car_model.get()
-        #         year = self.spinbox_year_of_manufacture.get()
-        #
-        #         # Проверка на пустые поля
-        #         if not brand or not model or not year:
-        #             raise ValueError("Все поля должны быть заполнены")
-        #
-        #         self.car = CarScraper(brand, model, year)
-        #         self.car_data = self.car.scrape()
-        #     except Exception as e:
-        #         messagebox.showerror("Ошибка", f"Произошла ошибка: {str(e)}\nПожалуйста, проверьте введенные данные.")
-
-
-
-
     def analog_cars_tab(self):
         self.variance = float
-        # brand = self.entry_car_brand.get().lower()
-        # model = self.entry_car_model.get().lower()
-        # year = int(self.spinbox_year_of_manufacture.get())
-        # self.car = CarScraper(brand, model, year)
-        # self.car_data = self.car.scrape()
-
         self.listbox1 = tk.Listbox(self.analog_cars)
         self.listbox1.pack(expand=True, fill="both", padx=10, pady=10)
         self.listbox1.bind("<Double-Button-1>", self.listbox1_double_click)
@@ -400,10 +368,10 @@ class Application(tk.Frame):
             "analog4_year": self.analog_cars_data[3]["year"] if len(self.analog_cars_data) >= 4 else "",
             "analog4_price": self.analog_cars_data[3]["price"] if len(self.analog_cars_data) >= 4 else "",
 
-            "variance": car_stats["variance"],
-            "average_price": car_stats["average_price"],
-            "min_price": car_stats["min_price"],
-            "max_price": car_stats["max_price"]
+            # "variance": car_stats["variance"],
+            # "average_price": car_stats["average_price"],
+            # "min_price": car_stats["min_price"],
+            # "max_price": car_stats["max_price"]
         }
 
         # Render the template with the context
