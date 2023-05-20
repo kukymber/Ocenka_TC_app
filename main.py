@@ -1,4 +1,5 @@
 import tkinter as tk
+import webbrowser
 from tkinter import ttk, messagebox
 from tkcalendar import DateEntry
 from tkinter import filedialog
@@ -16,20 +17,8 @@ class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.analog_cars_data = []
-        self.ru_month = {
-            1: 'января',
-            2: 'февраля',
-            3: 'марта',
-            4: 'апреля',
-            5: 'мая',
-            6: 'июня',
-            7: 'июля',
-            8: 'августа',
-            9: 'сентября',
-            10: 'октября',
-            11: 'ноября',
-            12: 'декабря'
-        }
+
+
 
         self.master = master
         self.master.title("Оценка авто")
@@ -44,6 +33,7 @@ class Application(tk.Frame):
         self.car_tab()
         self.analog_cars_tab()
         self.otchet_tab()
+        self.listbox1.bind("<Double-Button-1>", self.listbox1_double_click)
 
 
 
@@ -234,7 +224,7 @@ class Application(tk.Frame):
         analog_data = {
             "year": selected_item.split('Год выпуска: ')[1].split(',')[0].strip(),
             "price": selected_item.split('Цена: ')[1].split('₽')[0].strip(),
-            "link": selected_item.split('Ссылка: ')[1].strip(),  # Извлекаем ссылку
+            "link": selected_item.split('Ссылка: ')[1].strip(),
         }
 
         self.analog_cars_data.append(analog_data)
@@ -242,6 +232,14 @@ class Application(tk.Frame):
         variance = self.calculate_variance(prices)
 
         self.update_average_price()
+
+    def listbox1_double_click(self, event):
+        index = self.listbox1.curselection()
+        if not index:
+            return
+        selected_item = self.listbox1.get(index)
+        link = selected_item.split('Ссылка: ')[1].strip()
+        webbrowser.open(link)
 
     def extract_prices(self, data):
         prices = []  # Создаем пустой список для хранения цен
@@ -295,6 +293,20 @@ class Application(tk.Frame):
         current_month = current_date.month
         current_year = current_date.year
         formatted_month = str(current_month).zfill(2)
+        self.ru_month = {
+            1: 'января',
+            2: 'февраля',
+            3: 'марта',
+            4: 'апреля',
+            5: 'мая',
+            6: 'июня',
+            7: 'июля',
+            8: 'августа',
+            9: 'сентября',
+            10: 'октября',
+            11: 'ноября',
+            12: 'декабря'
+        }
         # index = self.listbox2.curselection()
         # selected_analog = self.listbox2.get(index)
 
