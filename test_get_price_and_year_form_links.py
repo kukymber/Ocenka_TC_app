@@ -4,6 +4,8 @@ import json
 
 class CarScraper:
     def __init__(self, brand, model, year):
+        if not isinstance(year, int):
+            raise ValueError("Год должен быть целым числом.")
         self.brand = brand
         self.model = model
         self.year = year
@@ -56,16 +58,20 @@ class CarScraper:
         links = self.parse_page(html)
 
         while len(links) < 5:
-            start_year = int((self.current_url.split('-')[-1])[:4])
-            self.current_url = self.base_url.replace(f'year-{start_year}/', f'?minyear={start_year - 1}&maxyear={start_year + 1}/')
-            html = self.get_html(self.current_url)
-            links = self.parse_page(html)
+            last_segment = self.current_url.split('-')[-1]
+            if last_segment[:4].isdigit():
+                start_year = int(last_segment[:4])
+                self.current_url = self.base_url.replace(f'year-{start_year}/',
+                                                         f'?minyear={start_year - 1}&maxyear={start_year + 1}/')
+                html = self.get_html(self.current_url)
+                links = self.parse_page(html)
 
         car_data = {}
 
         for link in links:
             price, year = self.extract_price_and_year(link)
             if price is not None and year is not None:
-                car_data[link] = {'price': price, 'year': year}
+                car_data[link] = {'price': price, 'year': year, 'link': link}
 
         return car_data
+
