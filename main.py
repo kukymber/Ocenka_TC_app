@@ -135,8 +135,6 @@ class Application(tk.Frame):
         self.entry_car_model = ttk.Entry(self.car)
         self.entry_car_model.grid(row=0, column=3, padx=5, pady=5)
 
-
-
         self.label_type_category = tk.Label(self.car, text="Тип ТС, Категория:")
         self.label_type_category.grid(row=1, column=0, padx=5, pady=5, sticky="w")
         self.entry_type_category = ttk.Entry(self.car)
@@ -287,22 +285,6 @@ class Application(tk.Frame):
         current_month = current_date.month
         current_year = current_date.year
         formatted_month = str(current_month).zfill(2)
-        self.ru_month = {
-            1: 'января',
-            2: 'февраля',
-            3: 'марта',
-            4: 'апреля',
-            5: 'мая',
-            6: 'июня',
-            7: 'июля',
-            8: 'августа',
-            9: 'сентября',
-            10: 'октября',
-            11: 'ноября',
-            12: 'декабря'
-        }
-        # index = self.listbox2.curselection()
-        # selected_analog = self.listbox2.get(index)
 
         # Определяем поля и метки для ввода данных об отчете
         self.label_date_of_create = tk.Label(self.otchet, text="Дата составления отчета:")
@@ -333,12 +315,33 @@ class Application(tk.Frame):
         self.label_average_price_minus_5 = tk.Label(self.otchet, textvariable=self.average_price_minus_5_var)
         self.label_average_price_minus_5.grid(row=4, column=0, padx=5, pady=5, sticky="w")
 
+
+
+
     def generate_word_file(self):
+        def calculate_prices():
+            calculator = PriceCalculator()
+
+            # получение цен всех аналогов
+            analog_prices = [analog["price"] for analog in self.analog_cars_data]
+
+            # обновление цен предложений в калькуляторе
+            calculator.update_offer_prices(analog_prices)
+
+            # вычисление минимальной и максимальной цены
+            min_price = min(analog_prices) if analog_prices else None
+            max_price = max(analog_prices) if analog_prices else None
+
+            # вычисление средней и конечной цены
+            final_average_offer_price = calculator.compute_final_average_offer_price()
+            final_price = calculator.compute_final_price()
+
+            return min_price, max_price, final_average_offer_price, final_price
 
         template = DocxTemplate('/home/anatolii/python_project/pythonProjectOcenka/exm.docx')
         month, day, year = self.entry_evaluation_date.get().split("/")
-        print(self.analog_cars_data)
-
+        # print(self.analog_cars_data)
+        min_price, max_price, final_average_offer_price, final_price = calculate_prices
         # Replace the placeholders with the chosen data
         context = {
             "owner_surname": self.entry_owner_surname.get(),
@@ -381,10 +384,10 @@ class Application(tk.Frame):
             "analog4_year": self.analog_cars_data[3]["year"] if len(self.analog_cars_data) >= 4 else "",
             "analog4_price": self.analog_cars_data[3]["price"] if len(self.analog_cars_data) >= 4 else "",
 
-            # "variance": car_stats["variance"],
-            # "average_price": car_stats["average_price"],
-            # "min_price": car_stats["min_price"],
-            # "max_price": car_stats["max_price"]
+            "min_price": min_price,
+            "max_price": max_price,
+            "final_average_offer_price": final_average_offer_price,
+            "final_price": final_price
         }
 
         # Render the template with the context
