@@ -207,7 +207,10 @@ class Application(tk.Frame):
         self.remove_button.pack(side=tk.LEFT, padx=10, pady=5)
 
     def update_average_price(self):
-        average_price = self.calculate_average_price()
+        offer_prices = self.extract_prices(self.analog_cars_data)
+        self.price_calculator.update_offer_prices(offer_prices)
+        average_price = self.price_calculator.average_offer_price
+
         self.average_price_var.set(f"Средняя цена: {round(average_price,2)}₽")
         self.average_price_minus_5_var.set(f"Средняя цена (с учетом 5% поправочного коэффицента): {round(average_price * 0.95, 2)}₽")
         self.entry_average_price.delete(0, tk.END)
@@ -228,8 +231,6 @@ class Application(tk.Frame):
         }
 
         self.analog_cars_data.append(analog_data)
-        prices = self.extract_prices(self.analog_cars_data)
-        variance = self.calculate_variance(prices)
 
         self.update_average_price()
 
@@ -242,50 +243,18 @@ class Application(tk.Frame):
         webbrowser.open(link)
 
     def extract_prices(self, data):
-        prices = []  # Создаем пустой список для хранения цен
+        prices = []
         for item in data:
-            price = item.get('price')  # Используем ключ 'price' для получения значения цены из словаря
+            price = item.get('price')
             if price is not None:
-                prices.append(float(price))  # Преобразуем цену в число с плавающей точкой и добавляем в список
+                prices.append(float(price))
         return prices
-
-    def calculate_variance(self, prices):
-        n = len(prices)  # Количество цен
-        if n < 2:
-            return 0.0  # Если цен меньше 2, то дисперсия будет равна 0
-
-        mean = sum(prices) / n  # Среднее значение цен
-        variance = sum((x - mean) ** 2 for x in prices) / (n - 1)  # Вычисление выборочной дисперсии
-        return variance
-
-    def get_stats(self):
-        prices = self.extract_prices(self.analog_cars_data)
-        return {
-            "variance": self.calculate_variance(prices),
-            "average_price": self.calculate_average_price(),
-            "min_price": min(prices),
-            "max_price": max(prices),
-        }
 
     def remove_analog(self):
         index = self.listbox2.curselection()
         if index:
             self.listbox2.delete(index)
             self.update_average_price()
-
-    def calculate_average_price(self):
-        total_price = 0
-        number_of_cars = 0
-
-        for car in self.listbox2.get(0, tk.END):
-            price = int(car.split(':')[1].split('₽')[0].strip())
-            total_price += price
-            number_of_cars += 1
-
-        if number_of_cars == 0:
-            return 0  # или любое другое значение по умолчанию
-        else:
-            return total_price / number_of_cars
 
     def otchet_tab(self):
         # Получение текущей даты
