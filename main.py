@@ -9,6 +9,7 @@ from docxtpl import DocxTemplate
 import datetime
 import calendar
 
+from formula_average_price import PriceCalculator
 from test_get_price_and_year_form_links import CarScraper
 
 
@@ -34,6 +35,7 @@ class Application(tk.Frame):
         self.analog_cars_tab()
         self.otchet_tab()
         self.listbox1.bind("<Double-Button-1>", self.listbox1_double_click)
+        self.price_calculator = PriceCalculator()
 
 
 
@@ -209,10 +211,11 @@ class Application(tk.Frame):
     def update_average_price(self):
         offer_prices = self.extract_prices(self.analog_cars_data)
         self.price_calculator.update_offer_prices(offer_prices)
-        average_price = self.price_calculator.average_offer_price
+        average_price = self.price_calculator.compute_average_offer_price()
 
-        self.average_price_var.set(f"Средняя цена: {round(average_price,2)}₽")
-        self.average_price_minus_5_var.set(f"Средняя цена (с учетом 5% поправочного коэффицента): {round(average_price * 0.95, 2)}₽")
+        self.average_price_var.set(f"Средняя цена: {round(average_price, 2)}₽")
+        self.average_price_minus_5_var.set(
+            f"Средняя цена (с учетом 5% поправочного коэффицента): {round(average_price * 0.95, 2)}₽")
         self.entry_average_price.delete(0, tk.END)
         self.entry_average_price.insert(0, str(average_price))
 
