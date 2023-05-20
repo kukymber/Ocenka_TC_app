@@ -32,9 +32,9 @@ class Application(tk.Frame):
         self.entry_average_price = tk.Entry(self.master)
         self.entry_average_price.pack()
         self.car_tab()
-        self.analog_cars_tab()
+        # self.analog_cars_tab()
         self.otchet_tab()
-        self.listbox1.bind("<Double-Button-1>", self.listbox1_double_click)
+        # self.listbox1.bind("<Double-Button-1>", self.listbox1_double_click)
         self.price_calculator = PriceCalculator()
 
 
@@ -99,6 +99,24 @@ class Application(tk.Frame):
             else:
                 return False
 
+        def get_and_scrape():
+            # Убрал рекурсивный вызов get_and_scrape()
+            try:
+                brand = self.entry_car_brand.get().lower()
+                model = self.entry_car_model.get().lower()
+                year = self.spinbox_year_of_manufacture.get()
+
+                if not brand or not model or not year:
+                    raise ValueError("Все поля должны быть заполнены")
+
+                self.car = CarScraper(brand, model, int(year))
+                self.car_data = self.car.scrape()
+                self.analog_cars_tab()  # Вызов после успешного скрапинга
+
+            except Exception as e:
+                messagebox.showerror("Ошибка", f"Произошла ошибка: {str(e)}\nПожалуйста, проверьте введенные данные.")
+
+
         # Определяем поля и метки для ввода данных об авто
         self.label_car_brand = tk.Label(self.car, text="Марка:")
         self.label_car_brand.grid(row=0, column=0, padx=5, pady=5, sticky="w")
@@ -109,6 +127,8 @@ class Application(tk.Frame):
         self.label_car_model.grid(row=0, column=2, padx=5, pady=5, sticky="w")
         self.entry_car_model = ttk.Entry(self.car)
         self.entry_car_model.grid(row=0, column=3, padx=5, pady=5)
+
+
 
         self.label_type_category = tk.Label(self.car, text="Тип ТС, Категория:")
         self.label_type_category.grid(row=1, column=0, padx=5, pady=5, sticky="w")
@@ -181,19 +201,40 @@ class Application(tk.Frame):
         self.entry_srts = ttk.Entry(self.car)
         self.entry_srts.grid(row=10, column=3, padx=5, pady=5)
 
-        def validate_entry_length(entry_text):
-            if len(entry_text) <= 17:
-                return True
-            else:
-                return False
+        self.submit_button = tk.Button(self.car, text="Submit", command=get_and_scrape)
+        self.submit_button.grid(row=11, column=0, padx=5, pady=5)
+
+        # def get_and_scrape():
+        #     get_and_scrape()
+        #     self.analog_cars_tab()
+        #     try:
+        #         brand = self.entry_car_brand.get()
+        #         model = self.entry_car_model.get()
+        #         year = self.spinbox_year_of_manufacture.get()
+        #
+        #         # Проверка на пустые поля
+        #         if not brand or not model or not year:
+        #             raise ValueError("Все поля должны быть заполнены")
+        #
+        #         self.car = CarScraper(brand, model, year)
+        #         self.car_data = self.car.scrape()
+        #     except Exception as e:
+        #         messagebox.showerror("Ошибка", f"Произошла ошибка: {str(e)}\nПожалуйста, проверьте введенные данные.")
+
+
+
 
     def analog_cars_tab(self):
         self.variance = float
-        self.car = CarScraper('toyota', 'probox', '2004')
-        self.car_data = self.car.scrape()
+        # brand = self.entry_car_brand.get().lower()
+        # model = self.entry_car_model.get().lower()
+        # year = int(self.spinbox_year_of_manufacture.get())
+        # self.car = CarScraper(brand, model, year)
+        # self.car_data = self.car.scrape()
 
         self.listbox1 = tk.Listbox(self.analog_cars)
         self.listbox1.pack(expand=True, fill="both", padx=10, pady=10)
+        self.listbox1.bind("<Double-Button-1>", self.listbox1_double_click)
 
         for link, data in self.car_data.items():
             # Добавляем ссылку вместе с годом и ценой
@@ -316,7 +357,6 @@ class Application(tk.Frame):
         template = DocxTemplate('/home/anatolii/python_project/pythonProjectOcenka/exm.docx')
         month, day, year = self.entry_evaluation_date.get().split("/")
         print(self.analog_cars_data)
-        car_stats = self.get_stats()
 
         # Replace the placeholders with the chosen data
         context = {
