@@ -195,11 +195,8 @@ class Application(tk.Frame):
             else:
                 return False
 
-
     def analog_cars_tab(self):
-        # self.extract_prices()
         self.variance = float
-        # Инициализируем экземпляр CarScraper
         self.car = CarScraper('toyota', 'probox', '2004')
         self.car_data = self.car.scrape()
 
@@ -207,7 +204,8 @@ class Application(tk.Frame):
         self.listbox1.pack(expand=True, fill="both", padx=10, pady=10)
 
         for link, data in self.car_data.items():
-            self.listbox1.insert(tk.END, f"Цена: {data['price']}₽, Год выпуска: {data['year']}")
+            # Добавляем ссылку вместе с годом и ценой
+            self.listbox1.insert(tk.END, f"Цена: {data['price']}₽, Год выпуска: {data['year']}, Ссылка: {link}")
 
         self.listbox2 = tk.Listbox(self.analog_cars)
         self.listbox2.pack(expand=True, fill="both", padx=10, pady=10)
@@ -234,8 +232,9 @@ class Application(tk.Frame):
         self.listbox2.insert(tk.END, selected_item)
 
         analog_data = {
-            "year": selected_item.split('Год выпуска: ')[1].strip(),
-            "price": selected_item.split('Цена: ')[1].split('₽')[0].strip()
+            "year": selected_item.split('Год выпуска: ')[1].split(',')[0].strip(),
+            "price": selected_item.split('Цена: ')[1].split('₽')[0].strip(),
+            "link": selected_item.split('Ссылка: ')[1].strip(),  # Извлекаем ссылку
         }
 
         self.analog_cars_data.append(analog_data)
