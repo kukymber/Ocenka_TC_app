@@ -16,7 +16,20 @@ class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.analog_cars_data = []
-            # !!!
+        self.ru_month = {
+            1: 'января',
+            2: 'февраля',
+            3: 'марта',
+            4: 'апреля',
+            5: 'мая',
+            6: 'июня',
+            7: 'июля',
+            8: 'августа',
+            9: 'сентября',
+            10: 'октября',
+            11: 'ноября',
+            12: 'декабря'
+        }
         self.master = master
         self.master.title("Оценка авто")
         self.master.geometry("800x600")
