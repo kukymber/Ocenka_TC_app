@@ -1,7 +1,10 @@
-import os
+import subprocess
+import sys
+
 import tkinter as tk
 from tkinter import ttk, messagebox
 from tkcalendar import DateEntry
+from tkinter.simpledialog import askfloat
 
 import webbrowser
 
@@ -237,11 +240,24 @@ class Application(tk.Frame):
         self.remove_button = tk.Button(self.analog_cars, text="Удалить", command=self.remove_analog)
         self.remove_button.pack(side=tk.LEFT, padx=10, pady=5)
 
-    def update_average_price(self):
-        offer_prices = self.extract_prices(self.analog_cars_data)
-        self.price_calculator.update_offer_prices(offer_prices)
-        average_price = self.price_calculator.compute_average_offer_price()
+        self.confirm_analogs_button = ttk.Button(self.analog_cars, text="Подтвердить аналоги",
+                                                 command=self.confirm_analogs)
+        self.confirm_analogs_button.pack(side=tk.LEFT, padx=10, pady=5)
 
+    def update_analog_prices(self):
+        analog_prices = []
+        for analog_data in self.analog_cars_data:
+            price = float(analog_data.get('price'))
+            coefficient = analog_data.get('coefficient', 1.0)
+            adjusted_price = price * coefficient
+            analog_data['adjusted_price'] = adjusted_price
+            analog_prices.append(adjusted_price)
+
+        # Обновляем цены предложений в калькуляторе
+        self.price_calculator.update_offer_prices(analog_prices)
+
+        # Обновляем среднюю цену и другие значения
+        average_price = self.price_calculator.compute_average_offer_price()
         self.average_price_var.set(f"Средняя цена: {round(average_price, 2)}₽")
         self.average_price_minus_5_var.set(
             f"Средняя цена (с учетом 5% поправочного коэффициента): {round(average_price * 0.95, 2)}₽")
@@ -260,11 +276,12 @@ class Application(tk.Frame):
             "year": selected_item.split('Год выпуска: ')[1].split(',')[0].strip(),
             "price": selected_item.split('Цена: ')[1].split('₽')[0].strip(),
             "link": selected_item.split('Ссылка: ')[1].strip(),
+            "coefficient": 1.0  # Добавить поправочный коэффициент по умолчанию
         }
 
         self.analog_cars_data.append(analog_data)
 
-        self.update_average_price()
+        self.update_analog_prices()
 
     def listbox1_double_click(self, event):
         index = self.listbox1.curselection()
@@ -287,6 +304,35 @@ class Application(tk.Frame):
         if index:
             self.listbox2.delete(index)
             self.update_average_price()
+
+    def confirm_analogs(self):
+        # Проверка, что выбран хотя бы один аналог
+        if not self.analog_cars_data:
+            messagebox.showerror("Ошибка", "Пожалуйста, выберите аналоги авто")
+            return
+
+        # Создаем словарь для хранения коэффициентов аналогов
+        analog_coefficients = {}
+
+        # Вывод окна с вопросом о необходимости исправления коэффициентов
+        answer = messagebox.askyesno("Исправление коэффициентов", "Необходимо исправить коэффициенты?")
+
+        if answer:
+            for i, analog_data in enumerate(self.analog_cars_data):
+                coefficient = askfloat("Исправление поправочного коэффициента",
+                                       f"Введите поправочный коэффициент для аналога с годом выпуска {analog_data['year']} и ценой {analog_data['price']}:")
+                if coefficient is not None:
+                    # Округляем коэффициент до двух значений после запятой
+                    coefficient = round(coefficient, 2)
+                    analog_data['coefficient'] = coefficient
+                    analog_coefficients[i] = coefficient
+
+                # Закрываем окно после установки коэффициента для последнего аналога
+                if i == len(self.analog_cars_data) - 1:
+                    self.master.focus_set()
+
+        # Обновляем цены аналогов согласно установленным коэффициентам
+        self.update_analog_prices()
 
     def otchet_tab(self):
         # Получение текущей даты
@@ -327,8 +373,9 @@ class Application(tk.Frame):
     def generate_word_file(self):
         def calculate_prices():
             calculator = PriceCalculator()
-
-            analog_prices = [float(analog["price"]) for analog in self.analog_cars_data]
+            analog_prices = [float(analog["price"]) * analog.get("coefficient", 1.0) for analog in
+                             self.analog_cars_data]
+            # остальной код
 
             # обновление цен предложений в калькуляторе
             calculator.update_offer_prices(analog_prices)
@@ -381,15 +428,19 @@ class Application(tk.Frame):
 
             "analog1_year": self.analog_cars_data[0]["year"] if len(self.analog_cars_data) >= 1 else "",
             "analog1_price": self.analog_cars_data[0]["price"] if len(self.analog_cars_data) >= 1 else "",
+            "analog1_coefficient": round(self.analog_cars_data[0]["coefficient"],2) if len(self.analog_cars_data) >= 1 else 1.0,
 
             "analog2_year": self.analog_cars_data[1]["year"] if len(self.analog_cars_data) >= 2 else "",
             "analog2_price": self.analog_cars_data[1]["price"] if len(self.analog_cars_data) >= 2 else "",
+            "analog2_coefficient": round(self.analog_cars_data[1]["coefficient"], 2) if len(self.analog_cars_data) >= 2 else 1.0,
 
             "analog3_year": self.analog_cars_data[2]["year"] if len(self.analog_cars_data) >= 3 else "",
             "analog3_price": self.analog_cars_data[2]["price"] if len(self.analog_cars_data) >= 3 else "",
+            "analog3_coefficient": round(self.analog_cars_data[2]["coefficient"], 2) if len(self.analog_cars_data) >= 3 else 1.0,
 
             "analog4_year": self.analog_cars_data[3]["year"] if len(self.analog_cars_data) >= 4 else "",
             "analog4_price": self.analog_cars_data[3]["price"] if len(self.analog_cars_data) >= 4 else "",
+            "analog4_coefficient": round(self.analog_cars_data[3]["coefficient"], 2) if len(self.analog_cars_data) >= 4 else 1.0,
 
             "min_price": int(min_price),
             "max_price": int(max_price),
@@ -408,7 +459,12 @@ class Application(tk.Frame):
         messagebox.showinfo("File Generated", "The Word file has been generated successfully.")
 
         # Открытие сгенерированного файла
-        os.startfile("/home/anatolii/python_project/pythonProjectOcenka/output.docx.docx")
+        if sys.platform == "win32":
+            subprocess.call(['start', 'output.docx'], shell=True)
+        elif sys.platform == "darwin":
+            subprocess.call(['open', 'output.docx'])
+        else:
+            subprocess.call(['xdg-open', 'output.docx'])
 
 
 
