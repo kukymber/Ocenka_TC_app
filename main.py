@@ -1,7 +1,8 @@
 import tkinter as tk
-import webbrowser
 from tkinter import ttk, messagebox
 from tkcalendar import DateEntry
+
+import webbrowser
 
 from docxtpl import DocxTemplate
 
@@ -10,6 +11,7 @@ import datetime
 from formula_average_price import PriceCalculator
 from test_get_price_and_year_form_links import CarScraper
 
+from num2words import num2words
 
 class Application(tk.Frame):
 
@@ -214,7 +216,7 @@ class Application(tk.Frame):
         self.entry_srts = ttk.Entry(self.car)
         self.entry_srts.grid(row=10, column=3, padx=5, pady=5)
 
-        self.submit_button = tk.Button(self.car, text="Submit", command=get_and_scrape)
+        self.submit_button = tk.Button(self.car, text="Поиск аналагов", command=get_and_scrape)
         self.submit_button.grid(row=11, column=0, padx=5, pady=5)
 
     def analog_cars_tab(self):
@@ -346,11 +348,14 @@ class Application(tk.Frame):
 
             return min_price, max_price, final_average_offer_price, final_price
 
+
+
         template = DocxTemplate('/home/anatolii/python_project/pythonProjectOcenka/exm.docx')
         month, day, year = self.entry_evaluation_date.get().split("/")
         # print(self.analog_cars_data)
-        min_price, max_price, final_average_offer_price, final_price = calculate_prices
-        # Replace the placeholders with the chosen data
+        min_price, max_price, final_average_offer_price, final_price = calculate_prices()
+        # Преобразование итоговой цены в словесное представление
+        final_price_words = num2words(final_price, lang='ru').capitalize()
         context = {
             "owner_surname": self.entry_owner_surname.get().title(),
             "owner_name": self.entry_owner_name.get().title(),
@@ -375,10 +380,11 @@ class Application(tk.Frame):
             "engine_capacity": self.entry_engine_capacity.get(),
             "technical_passport": self.entry_technical_passport.get(),
             "srts": self.entry_srts.get(),
+
             "date_of_create": self.entry_date_of_create.get(),
             "evaluation_date": f'{day} {self.ru_month[int(month)]} 20{year} года',
             "number_of_otchet": self.entry_number_of_otchet.get(),
-
+            "evaluation_date_analog": f'{day}.{month}.{year}',
 
             "analog1_year": self.analog_cars_data[0]["year"] if len(self.analog_cars_data) >= 1 else "",
             "analog1_price": self.analog_cars_data[0]["price"] if len(self.analog_cars_data) >= 1 else "",
@@ -395,7 +401,8 @@ class Application(tk.Frame):
             "min_price": min_price,
             "max_price": max_price,
             "final_average_offer_price": final_average_offer_price,
-            "final_price": final_price
+            "final_price": final_price,
+            "final_price_words": final_price_words
         }
 
         # Render the template with the context
