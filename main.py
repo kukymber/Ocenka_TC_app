@@ -106,11 +106,15 @@ class Application(tk.Frame):
             else:
                 return False
 
+        def format_data(data):
+            words = data.split(" ")
+            formatted_data = "_".join(word.strip() for word in words if word.strip())
+            return formatted_data
+
         def get_and_scrape():
-            # Убрал рекурсивный вызов get_and_scrape()
             try:
-                brand = self.entry_car_brand.get().lower()
-                model = self.entry_car_model.get().lower()
+                brand = format_data(self.entry_car_brand.get().lower())
+                model = format_data(self.entry_car_model.get().lower())
                 year = self.spinbox_year_of_manufacture.get()
 
                 if not brand or not model or not year:
@@ -118,11 +122,10 @@ class Application(tk.Frame):
 
                 self.car = CarScraper(brand, model, int(year))
                 self.car_data = self.car.scrape()
-                self.analog_cars_tab()  # Вызов после успешного скрапинга
+                self.analog_cars_tab()
 
             except Exception as e:
                 messagebox.showerror("Ошибка", f"Произошла ошибка: {str(e)}\nПожалуйста, проверьте введенные данные.")
-
 
         # Определяем поля и метки для ввода данных об авто
         self.label_car_brand = tk.Label(self.car, text="Марка:")
