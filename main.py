@@ -111,6 +111,8 @@ class Application(tk.Frame):
             formatted_data = "_".join(word.strip() for word in words if word.strip())
             return formatted_data
 
+        from tkinter import messagebox
+
         def get_and_scrape():
             try:
                 brand = format_data(self.entry_car_brand.get().lower())
@@ -123,6 +125,9 @@ class Application(tk.Frame):
                 self.car = CarScraper(brand, model, int(year))
                 self.car_data = self.car.scrape()
                 self.analog_cars_tab()
+
+                # Вывод сообщения о успешном завершении
+                messagebox.showinfo("Успех", "Поиск аналогов успешно завершен")
 
             except Exception as e:
                 messagebox.showerror("Ошибка", f"Произошла ошибка: {str(e)}\nПожалуйста, проверьте введенные данные.")
@@ -347,24 +352,24 @@ class Application(tk.Frame):
         min_price, max_price, final_average_offer_price, final_price = calculate_prices
         # Replace the placeholders with the chosen data
         context = {
-            "owner_surname": self.entry_owner_surname.get(),
-            "owner_name": self.entry_owner_name.get(),
-            "owner_patronymic": self.entry_owner_patronymic.get(),
+            "owner_surname": self.entry_owner_surname.get().title(),
+            "owner_name": self.entry_owner_name.get().title(),
+            "owner_patronymic": self.entry_owner_patronymic.get().title(),
             "owner_address": self.entry_owner_address.get(),
-            "customer_surname": self.entry_customer_surname.get(),
-            "customer_name": self.entry_customer_name.get(),
-            "customer_patronymic": self.entry_customer_patronymic.get(),
-            "car_brand": self.entry_car_brand.get(),
-            "car_model": self.entry_car_model.get(),
-            "type_category": self.entry_type_category.get(),
-            "country_of_origin": self.entry_country_of_origin.get(),
-            "vin": self.entry_vin.get(),
-            "body_number": self.entry_body_number.get(),
-            "chassis_number": self.entry_chassis_number.get(),
+            "customer_surname": self.entry_customer_surname.get().title(),
+            "customer_name": self.entry_customer_name.get().title(),
+            "customer_patronymic": self.entry_customer_patronymic.get().title(),
+            "car_brand": self.entry_car_brand.get().title(),
+            "car_model": self.entry_car_model.get().title(),
+            "type_category": self.entry_type_category.get().title(),
+            "country_of_origin": self.entry_country_of_origin.get().title(),
+            "vin": self.entry_vin.get().upper(),
+            "body_number": self.entry_body_number.get().upper(),
+            "chassis_number": self.entry_chassis_number.get().upper(),
             "license_plate_number": self.entry_license_plate_number.get(),
             "year_of_manufacture": self.spinbox_year_of_manufacture.get(),
             "transmission": self.label_transmission.get(),
-            "color": self.entry_color.get(),
+            "color": self.entry_color.get().title(),
             "number_of_seats": self.entry_number_of_seats.get(),
             "engine_power": self.entry_engine_power.get(),
             "engine_capacity": self.entry_engine_capacity.get(),
