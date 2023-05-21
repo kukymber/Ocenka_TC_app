@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tkinter import ttk, messagebox
 from tkcalendar import DateEntry
@@ -45,8 +46,6 @@ class Application(tk.Frame):
         self.car_tab()
         self.otchet_tab()
         self.price_calculator = PriceCalculator()
-
-
 
     def create_widgets(self):
         # Создаем вкладки
@@ -245,7 +244,7 @@ class Application(tk.Frame):
 
         self.average_price_var.set(f"Средняя цена: {round(average_price, 2)}₽")
         self.average_price_minus_5_var.set(
-            f"Средняя цена (с учетом 5% поправочного коэффицента): {round(average_price * 0.95, 2)}₽")
+            f"Средняя цена (с учетом 5% поправочного коэффициента): {round(average_price * 0.95, 2)}₽")
         self.entry_average_price.delete(0, tk.END)
         self.entry_average_price.insert(0, str(average_price))
 
@@ -300,7 +299,7 @@ class Application(tk.Frame):
         self.label_date_of_create = tk.Label(self.otchet, text="Дата составления отчета:")
         self.label_date_of_create.grid(row=0, column=0, padx=5, pady=5, sticky="w")
         self.entry_date_of_create = ttk.Entry(self.otchet)
-        self.entry_date_of_create.insert(0, f'{current_date.day} {self.ru_month[current_month]} {current_year}')
+        self.entry_date_of_create.insert(0, f'{current_date.day} {self.ru_month[current_month]} {current_year} года')
         self.entry_date_of_create.grid(row=0, column=1, padx=5, pady=5)
 
         self.label_evaluation_date = tk.Label(self.otchet, text="Дата оценки:")
@@ -325,15 +324,11 @@ class Application(tk.Frame):
         self.label_average_price_minus_5 = tk.Label(self.otchet, textvariable=self.average_price_minus_5_var)
         self.label_average_price_minus_5.grid(row=4, column=0, padx=5, pady=5, sticky="w")
 
-
-
-
     def generate_word_file(self):
         def calculate_prices():
             calculator = PriceCalculator()
 
-            # получение цен всех аналогов
-            analog_prices = [analog["price"] for analog in self.analog_cars_data]
+            analog_prices = [float(analog["price"]) for analog in self.analog_cars_data]
 
             # обновление цен предложений в калькуляторе
             calculator.update_offer_prices(analog_prices)
@@ -348,14 +343,12 @@ class Application(tk.Frame):
 
             return min_price, max_price, final_average_offer_price, final_price
 
-
-
         template = DocxTemplate('/home/anatolii/python_project/pythonProjectOcenka/exm.docx')
         month, day, year = self.entry_evaluation_date.get().split("/")
         # print(self.analog_cars_data)
         min_price, max_price, final_average_offer_price, final_price = calculate_prices()
         # Преобразование итоговой цены в словесное представление
-        final_price_words = num2words(final_price, lang='ru').capitalize()
+        final_price_words = num2words(int(final_price), lang='ru').capitalize()
         context = {
             "owner_surname": self.entry_owner_surname.get().title(),
             "owner_name": self.entry_owner_name.get().title(),
@@ -384,7 +377,7 @@ class Application(tk.Frame):
             "date_of_create": self.entry_date_of_create.get(),
             "evaluation_date": f'{day} {self.ru_month[int(month)]} 20{year} года',
             "number_of_otchet": self.entry_number_of_otchet.get(),
-            "evaluation_date_analog": f'{day}.{month}.{year}',
+            "evaluation_date_analog": f'{str(day).zfill(2)}.{str(month).zfill(2)}.{year}',
 
             "analog1_year": self.analog_cars_data[0]["year"] if len(self.analog_cars_data) >= 1 else "",
             "analog1_price": self.analog_cars_data[0]["price"] if len(self.analog_cars_data) >= 1 else "",
@@ -398,10 +391,10 @@ class Application(tk.Frame):
             "analog4_year": self.analog_cars_data[3]["year"] if len(self.analog_cars_data) >= 4 else "",
             "analog4_price": self.analog_cars_data[3]["price"] if len(self.analog_cars_data) >= 4 else "",
 
-            "min_price": min_price,
-            "max_price": max_price,
-            "final_average_offer_price": final_average_offer_price,
-            "final_price": final_price,
+            "min_price": int(min_price),
+            "max_price": int(max_price),
+            "final_average_offer_price": int(final_average_offer_price),
+            "final_price": int(final_price),
             "final_price_words": final_price_words
         }
 
@@ -414,6 +407,8 @@ class Application(tk.Frame):
         # Show a message box to inform the user that the file has been generated
         messagebox.showinfo("File Generated", "The Word file has been generated successfully.")
 
+        # Открытие сгенерированного файла
+        os.startfile("/home/anatolii/python_project/pythonProjectOcenka/output.docx.docx")
 
 
 
