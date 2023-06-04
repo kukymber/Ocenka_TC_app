@@ -1,3 +1,5 @@
+import math
+import os
 import subprocess
 import sys
 
@@ -5,8 +7,9 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from tkcalendar import DateEntry
 from tkinter.simpledialog import askfloat
-
+from tkcalendar import Calendar
 import webbrowser
+import babel.numbers
 
 from docxtpl import DocxTemplate
 
@@ -133,8 +136,9 @@ class Application(tk.Frame):
                 # Вывод сообщения о успешном завершении
                 messagebox.showinfo("Успех", "Поиск аналогов успешно завершен")
 
+
             except Exception as e:
-                messagebox.showerror("Ошибка", f"Произошла ошибка: {str(e)}\nПожалуйста, проверьте введенные данные.")
+                messagebox.showerror("Ошибка", f'{str(e)}\nПроверьте адресную строку!')
 
         # Определяем поля и метки для ввода данных об авто
         self.label_car_brand = tk.Label(self.car, text="Марка:")
@@ -360,8 +364,7 @@ class Application(tk.Frame):
         self.entry_number_of_otchet.insert(0, f"/{formatted_month}-{current_year}")
         self.entry_number_of_otchet.grid(row=2, column=1, padx=5, pady=5)
 
-        self.button_generate_report = ttk.Button(self.otchet, text="Сгенерировать отчет",
-                                                 command=self.generate_word_file)
+        self.button_generate_report = ttk.Button(self.otchet, text="Сгенерировать отчет", command=self.generate_word_file)
         self.button_generate_report.grid(row=5, column=0, padx=5, pady=5)
 
         self.label_average_price = tk.Label(self.otchet, textvariable=self.average_price_var)
@@ -371,11 +374,9 @@ class Application(tk.Frame):
         self.label_average_price_minus_5.grid(row=4, column=0, padx=5, pady=5, sticky="w")
 
     def generate_word_file(self):
-        def calculate_prices():
-            calculator = PriceCalculator()
+        def calculate_prices(calculator):
             analog_prices = [float(analog["price"]) * analog.get("coefficient", 1.0) for analog in
                              self.analog_cars_data]
-            # остальной код
 
             # обновление цен предложений в калькуляторе
             calculator.update_offer_prices(analog_prices)
@@ -388,14 +389,27 @@ class Application(tk.Frame):
             final_average_offer_price = calculator.compute_final_average_offer_price()
             final_price = calculator.compute_final_price()
 
-            return min_price, max_price, final_average_offer_price, final_price
+            # вычисление стандартной ошибки и доверительного интервала
+            standard_error = calculator.compute_standard_error()
+            confidence_interval = calculator.compute_confidence_interval()
 
-        template = DocxTemplate('/home/anatolii/python_project/pythonProjectOcenka/exm.docx')
+            return min_price, max_price, final_average_offer_price, final_price, standard_error, confidence_interval
+
+        calculator = PriceCalculator()
+        template = DocxTemplate(
+            'C:\\Users\\ostap\\PycharmProjects\\pythonProject\\dist\\main\\docx\\templates\\default.docx')
         month, day, year = self.entry_evaluation_date.get().split("/")
         # print(self.analog_cars_data)
-        min_price, max_price, final_average_offer_price, final_price = calculate_prices()
+        min_price, max_price, final_average_offer_price, final_price, standard_error, confidence_interval = calculate_prices(
+            calculator)
+        lower_bound, upper_bound = confidence_interval
+        accuracy = calculator.compute_accuracy()
+        if math.isnan(final_price):
+            messagebox.showerror("Ошибка", "Невозможно вычислить итоговую цену.")
+            return
         # Преобразование итоговой цены в словесное представление
         final_price_words = num2words(int(final_price), lang='ru').capitalize()
+
         context = {
             "owner_surname": self.entry_owner_surname.get().title(),
             "owner_name": self.entry_owner_name.get().title(),
@@ -446,17 +460,23 @@ class Application(tk.Frame):
             "max_price": int(max_price),
             "final_average_offer_price": int(final_average_offer_price),
             "final_price": int(final_price),
-            "final_price_words": final_price_words
+            "final_price_words": final_price_words,
+            "lower_bound": lower_bound,
+            "upper_bound": upper_bound,
+            "accuracy": accuracy
         }
 
-        # Render the template with the context
         template.render(context)
 
-        # Save the Word file
+        # Сохранение Word-файла
         template.save('output.docx')
 
-        # Show a message box to inform the user that the file has been generated
-        messagebox.showinfo("File Generated", "The Word file has been generated successfully.")
+        # Проверка, был ли успешно создан файл
+        if not os.path.exists('output.docx'):
+            messagebox.showerror("Ошибка", "Не удалось создать Word-файл")
+        else:
+            # Показать информационное окно для уведомления пользователя об успешном создании файла
+            messagebox.showinfo("Файл создан", "Word-файл успешно создан.")
 
         # Открытие сгенерированного файла
         if sys.platform == "win32":

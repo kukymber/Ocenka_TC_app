@@ -1,6 +1,9 @@
+from tkinter import messagebox
+
 import requests
 from bs4 import BeautifulSoup
 import json
+
 
 class CarScraper:
     def __init__(self, brand, model, year):
@@ -9,7 +12,7 @@ class CarScraper:
         self.brand = brand
         self.model = model
         self.year = year
-        self.base_url = f'https://auto.drom.ru/region38/{brand}/{model}/year-{year}/'
+        self.base_url = f'/'
         self.current_url = self.base_url
 
     def get_html(self, url):
@@ -31,9 +34,14 @@ class CarScraper:
         try:
             response = requests.get(url)
             if response.status_code != 200:
-                print(f"Ошибка при обращении к URL {url}, статус ответа: {response.status_code}")
-                return None, None
+                messagebox.showerror(f"Ошибка при обращении к URL {url}, статус ответа: {response.status_code}")
             soup = BeautifulSoup(response.text, 'html.parser')
+
+            # Проверка наличия элемента с классом "css-1o54lqy e1l5wm170"
+            not_found_element = soup.find('div', class_='css-1o54lqy e1l5wm170')
+            if not_found_element:
+                messagebox.showerror("Ошибка", "Запрашиваемая страница не существует.")
+                return None, None
 
             meta_element = soup.find('meta', attrs={'name': 'candy.config'})
             if meta_element is not None and 'content' in meta_element.attrs:
@@ -46,11 +54,17 @@ class CarScraper:
                 year = None
                 price = None
             return price, year
+
         except requests.exceptions.RequestException as e:
-            print(f"Ошибка при обращении к URL {url}: {e}")
+            messagebox.showerror("Ошибка", f"Ошибка при обращении к URL {url}: {e}")
             return None, None
+
         except json.JSONDecodeError as e:
-            print(f"Ошибка при разборе JSON: {e}")
+            messagebox.showerror("Ошибка", f"Ошибка при разборе JSON: {e}")
+            return None, None
+
+        except Exception as e:
+            messagebox.showerror("Ошибка", f"Ошибка: {e}")
             return None, None
 
     def scrape(self):
@@ -65,6 +79,9 @@ class CarScraper:
                                                          f'?minyear={start_year - 1}&maxyear={start_year + 1}/')
                 html = self.get_html(self.current_url)
                 links = self.parse_page(html)
+            if len(links) == 0:
+                raise Exception("Не удалось найти ссылки на аналоги")
+
 
         car_data = {}
 
@@ -74,4 +91,3 @@ class CarScraper:
                 car_data[link] = {'price': price, 'year': year, 'link': link}
 
         return car_data
-
