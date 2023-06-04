@@ -12,7 +12,7 @@ class CarScraper:
         self.brand = brand
         self.model = model
         self.year = year
-        self.base_url = f'/'
+        self.base_url = f'https://auto.drom.ru/region38/{brand}/{model}/year-{year}/'
         self.current_url = self.base_url
 
     def get_html(self, url):

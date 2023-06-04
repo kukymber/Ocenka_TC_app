@@ -20,6 +20,7 @@ from test_get_price_and_year_form_links import CarScraper
 
 from num2words import num2words
 
+
 class Application(tk.Frame):
 
     def __init__(self, master=None):
@@ -68,6 +69,7 @@ class Application(tk.Frame):
         self.tabControl.add(self.analog_cars, text="Аналоги авто")
         self.tabControl.add(self.otchet, text="Отчет")
         self.tabControl.pack(expand=1, fill="both")
+
     def client_tab(self):
         # Определяем поля и метки для ввода данных собственника авто
         self.label_owner_surname = tk.Label(self.client, text="Фамилия собственника:")
@@ -307,7 +309,8 @@ class Application(tk.Frame):
         index = self.listbox2.curselection()
         if index:
             self.listbox2.delete(index)
-            self.update_average_price()
+            del self.analog_cars_data[index[0]]
+            self.update_analog_prices()
 
     def confirm_analogs(self):
         # Проверка, что выбран хотя бы один аналог
@@ -364,7 +367,8 @@ class Application(tk.Frame):
         self.entry_number_of_otchet.insert(0, f"/{formatted_month}-{current_year}")
         self.entry_number_of_otchet.grid(row=2, column=1, padx=5, pady=5)
 
-        self.button_generate_report = ttk.Button(self.otchet, text="Сгенерировать отчет", command=self.generate_word_file)
+        self.button_generate_report = ttk.Button(self.otchet, text="Сгенерировать отчет",
+                                                 command=self.generate_word_file)
         self.button_generate_report.grid(row=5, column=0, padx=5, pady=5)
 
         self.label_average_price = tk.Label(self.otchet, textvariable=self.average_price_var)
@@ -396,8 +400,7 @@ class Application(tk.Frame):
             return min_price, max_price, final_average_offer_price, final_price, standard_error, confidence_interval
 
         calculator = PriceCalculator()
-        template = DocxTemplate(
-            'C:\\Users\\ostap\\PycharmProjects\\pythonProject\\dist\\main\\docx\\templates\\default.docx')
+        template = DocxTemplate('C:\\Users\\ostap\\PycharmProjects\\pythonProject1\\Ocenka_TC_app\\default.docx')
         month, day, year = self.entry_evaluation_date.get().split("/")
         # print(self.analog_cars_data)
         min_price, max_price, final_average_offer_price, final_price, standard_error, confidence_interval = calculate_prices(
@@ -442,19 +445,23 @@ class Application(tk.Frame):
 
             "analog1_year": self.analog_cars_data[0]["year"] if len(self.analog_cars_data) >= 1 else "",
             "analog1_price": self.analog_cars_data[0]["price"] if len(self.analog_cars_data) >= 1 else "",
-            "analog1_coefficient": round(self.analog_cars_data[0]["coefficient"],2) if len(self.analog_cars_data) >= 1 else 1.0,
+            "analog1_coefficient": round(self.analog_cars_data[0]["coefficient"], 2) if len(
+                self.analog_cars_data) >= 1 else 1.0,
 
             "analog2_year": self.analog_cars_data[1]["year"] if len(self.analog_cars_data) >= 2 else "",
             "analog2_price": self.analog_cars_data[1]["price"] if len(self.analog_cars_data) >= 2 else "",
-            "analog2_coefficient": round(self.analog_cars_data[1]["coefficient"], 2) if len(self.analog_cars_data) >= 2 else 1.0,
+            "analog2_coefficient": round(self.analog_cars_data[1]["coefficient"], 2) if len(
+                self.analog_cars_data) >= 2 else 1.0,
 
             "analog3_year": self.analog_cars_data[2]["year"] if len(self.analog_cars_data) >= 3 else "",
             "analog3_price": self.analog_cars_data[2]["price"] if len(self.analog_cars_data) >= 3 else "",
-            "analog3_coefficient": round(self.analog_cars_data[2]["coefficient"], 2) if len(self.analog_cars_data) >= 3 else 1.0,
+            "analog3_coefficient": round(self.analog_cars_data[2]["coefficient"], 2) if len(
+                self.analog_cars_data) >= 3 else 1.0,
 
             "analog4_year": self.analog_cars_data[3]["year"] if len(self.analog_cars_data) >= 4 else "",
             "analog4_price": self.analog_cars_data[3]["price"] if len(self.analog_cars_data) >= 4 else "",
-            "analog4_coefficient": round(self.analog_cars_data[3]["coefficient"], 2) if len(self.analog_cars_data) >= 4 else 1.0,
+            "analog4_coefficient": round(self.analog_cars_data[3]["coefficient"], 2) if len(
+                self.analog_cars_data) >= 4 else 1.0,
 
             "min_price": int(min_price),
             "max_price": int(max_price),
@@ -485,8 +492,6 @@ class Application(tk.Frame):
             subprocess.call(['open', 'output.docx'])
         else:
             subprocess.call(['xdg-open', 'output.docx'])
-
-
 
 
 if __name__ == '__main__':
