@@ -400,7 +400,8 @@ class Application(tk.Frame):
             return min_price, max_price, final_average_offer_price, final_price, standard_error, confidence_interval
 
         calculator = PriceCalculator()
-        template = DocxTemplate('C:\\Users\\ostap\\PycharmProjects\\pythonProject1\\Ocenka_TC_app\\default.docx')
+        template_path = os.path.join('dist', 'main', 'docx', 'templates', 'default.docx')
+        template = DocxTemplate(template_path)
         month, day, year = self.entry_evaluation_date.get().split("/")
         # print(self.analog_cars_data)
         min_price, max_price, final_average_offer_price, final_price, standard_error, confidence_interval = calculate_prices(
