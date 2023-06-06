@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.stats as stats
 
+
 class PriceCalculator:
     def __init__(self):
         self.offer_prices = []
