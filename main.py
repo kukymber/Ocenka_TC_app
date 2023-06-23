@@ -41,8 +41,8 @@ class Application(tk.Frame):
             12: 'декабря'
         }
         self.master = master
-        self.master.title("Оценка авто")
-        self.master.geometry("800x600")
+        self.master.title("Эксперт")
+        self.master.geometry("800x500")
         self.pack(fill=tk.BOTH, expand=True)
         self.create_widgets()
         self.client_tab()
@@ -108,6 +108,30 @@ class Application(tk.Frame):
         self.entry_customer_patronymic.grid(row=6, column=1, padx=5, pady=5)
 
     def car_tab(self):
+        def toggle_vin_entry():
+            if self.vin_number_var.get():
+                self.entry_vin.delete(0, tk.END)
+                self.entry_vin.insert(0, "Отсутствует")
+                self.entry_vin.config(state="disabled")
+            else:
+                self.entry_vin.delete(0, tk.END)
+                self.entry_vin.config(state="normal")
+
+            if self.body_number_var.get():
+                self.entry_body_number.delete(0, tk.END)
+                self.entry_body_number.insert(0, "Отсутствует")
+                self.entry_body_number.config(state="disabled")
+            else:
+                self.entry_body_number.delete(0, tk.END)
+                self.entry_body_number.config(state="normal")
+
+            if self.chassis_number_var.get():
+                self.entry_chassis_number.delete(0, tk.END)
+                self.entry_chassis_number.insert(0, "Отсутствует")
+                self.entry_chassis_number.config(state="disabled")
+            else:
+                self.entry_chassis_number.delete(0, tk.END)
+                self.entry_chassis_number.config(state="normal")
 
         def validate_entry_length(entry_text):
             if len(entry_text) <= 17:
@@ -125,9 +149,6 @@ class Application(tk.Frame):
                 brand = format_data(self.entry_car_brand.get().lower())
                 model = format_data(self.entry_car_model.get().lower())
                 year = self.spinbox_year_of_manufacture.get()
-                body_number = "Отсутствует" if self.body_number_var.get() else ""
-                chassis_number = "Отсутствует" if self.chassis_number_var.get() else ""
-                number_var = "Отсутствует" if self.vin_number_var.get() else ""
 
                 if not brand or not model or not year:
                     raise ValueError("Все поля должны быть заполнены")
@@ -143,27 +164,7 @@ class Application(tk.Frame):
             except Exception as e:
                 messagebox.showerror("Ошибка", f'{str(e)}\nПроверьте адресную строку!')
 
-        def toggle_vin_entry():
-            if self.vin_number_var.get():
-                self.entry_vin.config(state="disabled", text="Отсутствует")
-            else:
-                self.entry_vin.config(state="normal", text="")
 
-            if self.body_number_var.get():
-                self.entry_body_number.config(state="disabled")
-                self.entry_body_number.delete(0, tk.END)
-                self.entry_body_number.insert(0, "Отсутствует")
-            else:
-                self.entry_body_number.config(state="normal")
-                self.entry_body_number.delete(0, tk.END)
-
-            if self.chassis_number_var.get():
-                self.entry_chassis_number.config(state="disabled")
-                self.entry_chassis_number.delete(0, tk.END)
-                self.entry_chassis_number.insert(0, "Отсутствует")
-            else:
-                self.entry_chassis_number.config(state="normal")
-                self.entry_chassis_number.delete(0, tk.END)
 
         # Определяем поля и метки для ввода данных об авто
         self.label_car_brand = tk.Label(self.car, text="Марка:")
@@ -188,7 +189,7 @@ class Application(tk.Frame):
 
         self.label_vin = tk.Label(self.car, text="VIN:")
         self.label_vin.grid(row=2, column=0, padx=5, pady=5, sticky="w")
-        self.entry_vin = tk.Entry(self.car, validate="key")
+        self.entry_vin = ttk.Entry(self.car, validate="key")
         self.entry_vin['validatecommand'] = (self.entry_vin.register(validate_entry_length), '%P')
         self.entry_vin.grid(row=2, column=1, padx=5, pady=5, sticky="w")
 
@@ -217,13 +218,13 @@ class Application(tk.Frame):
 
         self.label_license_plate_number = tk.Label(self.car, text="Гос. номер:")
         self.label_license_plate_number.grid(row=5, column=2, padx=5, pady=5, sticky="w")
-        self.entry_license_plate_number = tk.Entry(self.car)
+        self.entry_license_plate_number = ttk.Entry(self.car)
         self.entry_license_plate_number.grid(row=5, column=3, padx=5, pady=5, sticky="w")
 
         self.label_year_of_manufacture = tk.Label(self.car, text="Год выпуска:")
-        self.label_year_of_manufacture.grid(row=5, column=0, padx=5, pady=5, sticky="w")
+        self.label_year_of_manufacture.grid(row=6, column=0, padx=5, pady=5, sticky="w")
         self.spinbox_year_of_manufacture = tk.Spinbox(self.car, from_=1900, to=2050, increment=1)
-        self.spinbox_year_of_manufacture.grid(row=5, column=1, padx=5, pady=5, sticky="w")
+        self.spinbox_year_of_manufacture.grid(row=6, column=1, padx=5, pady=5, sticky="w")
 
         self.label_transmission = tk.Label(self.car, text="Коробка передач:")
         self.label_transmission.grid(row=3, column=3, padx=5, pady=5, sticky="w")
@@ -231,9 +232,9 @@ class Application(tk.Frame):
         self.combobox_transmission.grid(row=4, column=3, padx=5, pady=5, sticky="w")
 
         self.label_color = tk.Label(self.car, text="Цвет:")
-        self.label_color.grid(row=6, column=0, padx=5, pady=5, sticky="w")
+        self.label_color.grid(row=5, column=0, padx=5, pady=5, sticky="w")
         self.entry_color = ttk.Entry(self.car)
-        self.entry_color.grid(row=6, column=1, padx=5, pady=5, sticky="w")
+        self.entry_color.grid(row=5, column=1, padx=5, pady=5, sticky="w")
 
         self.label_number_of_seats = tk.Label(self.car, text="Число мест:")
         self.label_number_of_seats.grid(row=6, column=2, padx=5, pady=5, sticky="w")
@@ -262,6 +263,8 @@ class Application(tk.Frame):
 
         self.submit_button = tk.Button(self.car, text="Поиск аналогов", command=get_and_scrape)
         self.submit_button.grid(row=10, column=0, columnspan=4, padx=5, pady=5)
+
+
 
 
     def analog_cars_tab(self):
@@ -414,6 +417,7 @@ class Application(tk.Frame):
         self.label_average_price_minus_5 = tk.Label(self.otchet, textvariable=self.average_price_minus_5_var)
         self.label_average_price_minus_5.grid(row=4, column=0, padx=5, pady=5, sticky="w")
 
+
     def generate_word_file(self):
         def calculate_prices(calculator):
             analog_prices = [float(analog["price"]) * analog.get("coefficient", 1.0) for analog in
@@ -437,11 +441,9 @@ class Application(tk.Frame):
             return min_price, max_price, final_average_offer_price, final_price, standard_error, confidence_interval
 
         calculator = PriceCalculator()
-        # template_path = os.path.join('docx', 'templates', 'default.docx')
         template_path = os.path.join('default.docx')
         template = DocxTemplate(template_path)
         month, day, year = self.entry_evaluation_date.get().split("/")
-        # print(self.analog_cars_data)
         min_price, max_price, final_average_offer_price, final_price, standard_error, confidence_interval = calculate_prices(
             calculator)
         lower_bound, upper_bound = confidence_interval
