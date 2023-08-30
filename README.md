@@ -22,12 +22,12 @@
 
 1. Склонируйте репозиторий на ваше устройство:
     ```shell
-    git clone https://github.com/yourusername/vehicle-valuation-app.git
+    git clone https://github.com/kukymber/Ocenka_TC_app.git
     ```
 
 2. Перейдите в директорию проекта:
     ```shell
-    cd vehicle-valuation-app
+    cd Ocenka_TC_app
     ```
 
 3. Установите необходимые зависимости:
