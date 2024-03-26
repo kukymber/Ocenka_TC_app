@@ -1,8 +1,8 @@
+import json
 from tkinter import messagebox
 
 import requests
 from bs4 import BeautifulSoup
-import json
 
 
 class CarScraper:
@@ -71,7 +71,8 @@ class CarScraper:
         html = self.get_html(self.current_url)
         links = self.parse_page(html)
 
-        while len(links) < 5:
+        while len(links) < 4:
+            counter = 0
             last_segment = self.current_url.split('-')[-1]
             if last_segment[:4].isdigit():
                 start_year = int(last_segment[:4])
@@ -79,7 +80,7 @@ class CarScraper:
                                                          f'?minyear={start_year - 1}&maxyear={start_year + 1}/')
                 html = self.get_html(self.current_url)
                 links = self.parse_page(html)
-            if len(links) == 0:
+            elif len(links) == 0:
                 raise Exception("Не удалось найти ссылки на аналоги")
 
 

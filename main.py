@@ -1,24 +1,19 @@
+import datetime
 import math
 import os
 import subprocess
 import sys
-
 import tkinter as tk
-from tkinter import ttk, messagebox
-from tkcalendar import DateEntry
-from tkinter.simpledialog import askfloat
-from tkcalendar import Calendar
 import webbrowser
-import babel.numbers
+from tkinter import ttk, messagebox
+from tkinter.simpledialog import askfloat
 
 from docxtpl import DocxTemplate
-
-import datetime
+from num2words import num2words
+from tkcalendar import DateEntry
 
 from formula_average_price import PriceCalculator
 from test_get_price_and_year_form_links import CarScraper
-
-from num2words import num2words
 
 
 class Application(tk.Frame):
@@ -378,7 +373,6 @@ class Application(tk.Frame):
                 if i == len(self.analog_cars_data) - 1:
                     self.master.focus_set()
 
-        # Обновляем цены аналогов согласно установленным коэффициентам
         self.update_analog_prices()
 
     def otchet_tab(self):
@@ -511,16 +505,17 @@ class Application(tk.Frame):
             "final_price_words": final_price_words,
             "lower_bound": lower_bound,
             "upper_bound": upper_bound,
-            "accuracy": accuracy
+            "accuracy": int(accuracy),
         }
 
         template.render(context)
-
+        output_file = (f'{self.entry_owner_surname.get().title()}{self.entry_car_brand.get().title()}'
+                       f'{self.entry_car_model.get().title()}.docx')
         # Сохранение Word-файла
-        template.save('output.docx')
+        template.save(output_file)
 
         # Проверка, был ли успешно создан файл
-        if not os.path.exists('output.docx'):
+        if not os.path.exists(output_file):
             messagebox.showerror("Ошибка", "Не удалось создать Word-файл")
         else:
             # Показать информационное окно для уведомления пользователя об успешном создании файла
@@ -528,11 +523,11 @@ class Application(tk.Frame):
 
         # Открытие сгенерированного файла
         if sys.platform == "win32":
-            subprocess.call(['start', 'output.docx'], shell=True)
+            subprocess.call(['start', output_file], shell=True)
         elif sys.platform == "darwin":
-            subprocess.call(['open', 'output.docx'])
+            subprocess.call(['open', output_file])
         else:
-            subprocess.call(['xdg-open', 'output.docx'])
+            subprocess.call(['xdg-open', output_file])
 
 
 if __name__ == '__main__':
